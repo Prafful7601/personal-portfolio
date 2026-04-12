@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+
+:root {
+  color-scheme: dark;
+  font-family: 'Manrope', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --bg: #070b16;
+  --bg-alt: #0b1120;
+  --surface: rgba(14, 20, 37, 0.8);
+  --surface-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+  --heading: #f9f6ef;
+  --text: #d9dccf;
+  --muted: #9da7bc;
+  --muted-strong: #c5cada;
+  --line: rgba(255, 255, 255, 0.08);
+  --accent: #ffb86c;
+  --accent-soft: #9ae9c2;
+  --ink: #081018;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top, rgba(255, 138, 36, 0.1), transparent 28%),
+    radial-gradient(circle at 85% 20%, rgba(63, 212, 180, 0.1), transparent 22%),
+    linear-gradient(180deg, #0a1020 0%, #070b16 48%, #060811 100%);
+}
+
+a,
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+h1,
+h2,
+h3,
+p,
+ul {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  color: #081018;
+  background: #ffb86c;
+}
