@@ -24,9 +24,9 @@ const journey = [
   },
   {
     label: 'Where I am going',
-    title: 'Toward backend ownership on systems that need speed, correctness, and scale.',
+    title: 'Toward backend, IoT, and applied AI systems with real-world impact.',
     text:
-      'I am now compounding around distributed systems, API performance, transactional integrity, caching, and the kind of infrastructure decisions that matter once products stop being small.',
+      'I am now compounding around distributed systems, API performance, transactional integrity, caching, and applied AI systems that move beyond software alone. That direction now includes IoT-driven problem solving and invention-led work.',
   },
 ]
 
@@ -47,9 +47,22 @@ const focusCards = [
     tag: 'Trajectory',
     title: 'Engineering direction with intent',
     text:
-      'I am optimizing toward backend-heavy roles where performance and reliability actually matter.',
+      'I am optimizing toward backend-heavy roles while moving into AI, IoT, and invention-led systems work.',
   },
 ]
+
+const upcomingPatent = {
+  tag: 'Coming Soon',
+  title: 'An IoT patent in precision agriculture is part of where I am headed.',
+  summary:
+    'The proposed invention is an AI-based pest detection and automated pesticide administration device for precision agriculture. It uses a camera module to capture insect images or crop-damage patterns, identifies pest species with machine learning, selects the appropriate treatment based on pest type and crop stage, and triggers precision spraying in controlled quantities.',
+  points: [
+    'Combines computer vision, machine learning, IoT hardware, and automated actuation.',
+    'Targets high-accuracy pest identification from insects and leaf-bite damage patterns.',
+    'Determines pesticide or herbicide treatment based on pest type and crop growth stage.',
+    'Improves pest management efficiency while reducing chemical overuse and environmental impact.',
+  ],
+}
 
 const experience = [
   {
@@ -184,6 +197,8 @@ const marquee = [
   'Performance Tuning',
   'Transaction Integrity',
   'Query Optimization',
+  'AI x IoT Systems',
+  'Patent in Progress',
   'Founder Positioning',
   'Personal Branding',
   'Rate Limiting',
@@ -217,10 +232,37 @@ function App() {
     [0, 0.28],
     [0, prefersReducedMotion ? 0 : -6],
   )
+  const bgYSlow = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -120])
+  const bgYMedium = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 180])
+  const bgYFast = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 280])
+  const bgRotate = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 18])
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1, prefersReducedMotion ? 1 : 1.14])
+  const ghostX = useTransform(scrollYProgress, [0, 1], ['-4%', prefersReducedMotion ? '-4%' : '8%'])
+  const ghostXReverse = useTransform(
+    scrollYProgress,
+    [0, 1],
+    ['6%', prefersReducedMotion ? '6%' : '-6%'],
+  )
+  const gridOpacity = useTransform(scrollYProgress, [0, 0.3, 1], [0.22, 0.34, 0.16])
 
   return (
     <div className="page-shell">
       <motion.div className="progress-bar" style={{ scaleX: progressScale }} />
+      <div className="parallax-stage" aria-hidden="true">
+        <motion.div className="parallax-grid" style={{ y: bgYSlow, opacity: gridOpacity }} />
+        <motion.div className="parallax-rings" style={{ y: bgYMedium, rotate: bgRotate, scale: bgScale }} />
+        <motion.div className="parallax-beam parallax-beam-a" style={{ y: bgYFast }} />
+        <motion.div className="parallax-beam parallax-beam-b" style={{ y: bgYMedium }} />
+        <motion.div className="parallax-ghost parallax-ghost-a" style={{ y: bgYMedium, x: ghostX }}>
+          SYSTEMS
+        </motion.div>
+        <motion.div
+          className="parallax-ghost parallax-ghost-b"
+          style={{ y: bgYFast, x: ghostXReverse }}
+        >
+          SCALE
+        </motion.div>
+      </div>
       <motion.div className="ambient-orb ambient-orb-a" style={{ y: heroOrbY }} />
       <motion.div className="ambient-orb ambient-orb-b" style={{ y: heroOrbY }} />
       <motion.div className="ambient-orb ambient-orb-c" style={{ y: heroOrbY }} />
@@ -415,6 +457,22 @@ function App() {
               </Reveal>
             ))}
           </div>
+
+          <Reveal as="article" className="patent-card" delay={0.18}>
+            <div className="patent-shell">
+              <div className="patent-copy">
+                <p className="section-tag">{upcomingPatent.tag}</p>
+                <h3>{upcomingPatent.title}</h3>
+                <p>{upcomingPatent.summary}</p>
+              </div>
+
+              <ul className="patent-points">
+                {upcomingPatent.points.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
         </section>
 
         <section className="content-section" id="work" aria-labelledby="experience-title">

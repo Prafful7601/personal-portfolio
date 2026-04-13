@@ -4,6 +4,88 @@
   isolation: isolate;
 }
 
+.parallax-stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.parallax-grid,
+.parallax-rings,
+.parallax-beam,
+.parallax-ghost {
+  position: absolute;
+}
+
+.parallax-grid {
+  inset: -10%;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 5rem 5rem;
+  mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.92), transparent 78%);
+}
+
+.parallax-rings {
+  top: 14vh;
+  left: 48%;
+  width: 48rem;
+  height: 48rem;
+  border-radius: 50%;
+  transform-origin: 50% 50%;
+  background:
+    radial-gradient(circle, transparent 32%, rgba(255, 255, 255, 0.06) 32.3%, transparent 33.4%),
+    radial-gradient(circle, transparent 47%, rgba(154, 233, 194, 0.08) 47.3%, transparent 48.6%),
+    radial-gradient(circle, transparent 61%, rgba(255, 186, 108, 0.08) 61.3%, transparent 62.4%);
+  opacity: 0.64;
+}
+
+.parallax-beam {
+  width: 34rem;
+  height: 14rem;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.2;
+}
+
+.parallax-beam-a {
+  top: 22vh;
+  right: -8rem;
+  transform: rotate(-18deg);
+  background: linear-gradient(90deg, rgba(255, 138, 36, 0.2), rgba(255, 138, 36, 0.02));
+}
+
+.parallax-beam-b {
+  bottom: 18vh;
+  left: -8rem;
+  transform: rotate(16deg);
+  background: linear-gradient(90deg, rgba(154, 233, 194, 0.16), rgba(154, 233, 194, 0.02));
+}
+
+.parallax-ghost {
+  inset: auto;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(7rem, 18vw, 16rem);
+  font-weight: 700;
+  letter-spacing: -0.08em;
+  color: rgba(255, 255, 255, 0.035);
+  white-space: nowrap;
+  line-height: 0.82;
+  user-select: none;
+}
+
+.parallax-ghost-a {
+  top: 12vh;
+  left: -2%;
+}
+
+.parallax-ghost-b {
+  bottom: 10vh;
+  right: -2%;
+}
+
 .progress-bar {
   position: fixed;
   top: 0;
@@ -429,6 +511,7 @@ main {
 .metrics-section,
 .trajectory-grid,
 .focus-grid,
+.patent-shell,
 .project-grid,
 .two-column-grid,
 .skills-grid {
@@ -444,6 +527,7 @@ main {
 .metric-card,
 .trajectory-card,
 .focus-card,
+.patent-card,
 .timeline-item,
 .project-card,
 .info-card,
@@ -460,6 +544,7 @@ main {
 .metric-card::after,
 .trajectory-card::after,
 .focus-card::after,
+.patent-card::after,
 .project-card::after,
 .skill-card::after,
 .info-card::after {
@@ -476,6 +561,7 @@ main {
 .metric-card:hover::after,
 .trajectory-card:hover::after,
 .focus-card:hover::after,
+.patent-card:hover::after,
 .project-card:hover::after,
 .skill-card:hover::after,
 .info-card:hover::after {
@@ -520,6 +606,19 @@ main {
 
 .content-section {
   padding: 5rem 0 0;
+  position: relative;
+}
+
+.content-section::before {
+  content: '';
+  position: absolute;
+  inset: 2rem 0 auto;
+  height: 18rem;
+  border-radius: 2rem;
+  background: radial-gradient(circle at left, rgba(255, 138, 36, 0.08), transparent 38%);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .section-heading {
@@ -550,6 +649,7 @@ main {
 
 .trajectory-grid,
 .focus-grid,
+.patent-shell,
 .project-grid,
 .two-column-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -557,6 +657,7 @@ main {
 
 .trajectory-card,
 .focus-card,
+.patent-card,
 .info-card,
 .skill-card,
 .project-card {
@@ -582,6 +683,66 @@ main {
 .focus-grid {
   margin-top: 1.25rem;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.patent-card {
+  margin-top: 1.25rem;
+  background:
+    radial-gradient(circle at top right, rgba(255, 138, 36, 0.12), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(154, 233, 194, 0.1), transparent 35%),
+    rgba(14, 20, 37, 0.86);
+}
+
+.patent-shell {
+  grid-template-columns: 1.08fr 0.92fr;
+  align-items: start;
+}
+
+.patent-copy {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.patent-copy h3 {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--heading);
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  line-height: 1.02;
+  max-width: 14ch;
+}
+
+.patent-copy p:last-child {
+  color: var(--muted-strong);
+}
+
+.patent-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.patent-points li {
+  position: relative;
+  padding: 1rem 1rem 1rem 1.8rem;
+  border-radius: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 16, 31, 0.6);
+  color: var(--muted-strong);
+}
+
+.patent-points li::before {
+  content: '';
+  position: absolute;
+  top: 1.3rem;
+  left: 1rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: linear-gradient(140deg, #ff8a24, #3fd4b4);
+  box-shadow: 0 0 0 0.28rem rgba(255, 138, 36, 0.1);
 }
 
 .focus-card {
@@ -825,6 +986,7 @@ main {
   .hero-section,
   .trajectory-grid,
   .focus-grid,
+  .patent-shell,
   .project-grid,
   .two-column-grid,
   .contact-band,
@@ -845,6 +1007,12 @@ main {
 
   .hero-panel {
     min-height: 35rem;
+  }
+
+  .parallax-rings {
+    left: 34%;
+    width: 34rem;
+    height: 34rem;
   }
 }
 
@@ -868,6 +1036,21 @@ main {
 
   .hero-copy h1 {
     font-size: clamp(2.95rem, 15vw, 4.6rem);
+  }
+
+  .parallax-ghost {
+    font-size: clamp(4.4rem, 20vw, 7rem);
+  }
+
+  .parallax-rings {
+    top: 18vh;
+    left: 24%;
+    width: 24rem;
+    height: 24rem;
+  }
+
+  .parallax-beam {
+    width: 20rem;
   }
 
   .hero-text {
