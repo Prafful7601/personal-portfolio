@@ -189,7 +189,7 @@ const brandingClients = [
     role: 'Founder, Safeducate',
     tag: 'ET 40 Under Forty',
     href: 'https://www.linkedin.com/in/divyajainseekho/',
-    avatar: 'https://unavatar.io/linkedin/divyajainseekho',
+    photo: 'https://media.licdn.com/dms/image/v2/D5603AQGCD6efBxlI3Q/profile-displayphoto-scale_200_200/B56ZsxQAhDHkAY-/0/1766057840698?e=2147483647&v=beta&t=JTx7HFJkmEE-2iEOz3fYPn4foCfBY3SBeW2PEYOXw-U',
     gradient: ['#ff8a24', '#ffd27f'],
   },
   {
@@ -197,7 +197,7 @@ const brandingClients = [
     role: 'Entrepreneur, Ishin Fashions',
     tag: 'D2C & Fashion',
     href: 'https://www.linkedin.com/in/charu-agrawal-511409178/',
-    avatar: 'https://unavatar.io/linkedin/charu-agrawal-511409178',
+    photo: 'https://media.licdn.com/dms/image/v2/D4D03AQE5VxCTvpX2mw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1684396364074?e=2147483647&v=beta&t=rgBivzO5WIwXbKpah7Y9t4hD4oxtkq1eYvdfb8RHCDs',
     gradient: ['#3fd4b4', '#9ae9c2'],
   },
   {
@@ -205,7 +205,7 @@ const brandingClients = [
     role: 'Founder & Professional',
     tag: 'LinkedIn Growth',
     href: 'https://www.linkedin.com/in/sneha-jain-5a989015/',
-    avatar: 'https://unavatar.io/linkedin/sneha-jain-5a989015',
+    photo: null,
     gradient: ['#a855f7', '#e879f9'],
   },
   {
@@ -213,7 +213,7 @@ const brandingClients = [
     role: 'Entrepreneur & Founder',
     tag: 'Personal Brand',
     href: 'https://www.linkedin.com/in/prateektosniwal/',
-    avatar: 'https://unavatar.io/linkedin/prateektosniwal',
+    photo: null,
     gradient: ['#3b82f6', '#93c5fd'],
   },
 ]
@@ -377,6 +377,42 @@ function TerminalBlock({ prefersReducedMotion }) {
         </motion.span>
       </div>
     </motion.div>
+  )
+}
+
+// ─── ClientAvatar ─────────────────────────────────────────────────────────────
+function ClientAvatar({ client }) {
+  const [imgError, setImgError] = useState(false)
+  const initials = client.name.split(' ').map((n) => n[0]).join('')
+  const showPhoto = client.photo && !imgError
+
+  return (
+    <div className="client-avatar-wrap">
+      <div
+        className="client-avatar"
+        style={
+          showPhoto
+            ? {}
+            : { background: `linear-gradient(135deg, ${client.gradient[0]}, ${client.gradient[1]})` }
+        }
+      >
+        {showPhoto ? (
+          <img
+            src={client.photo}
+            alt={client.name}
+            className="client-avatar-img"
+            referrerPolicy="no-referrer"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          initials
+        )}
+      </div>
+      <div
+        className="client-avatar-ring"
+        style={{ borderColor: `${client.gradient[0]}66` }}
+      />
+    </div>
   )
 }
 
@@ -822,7 +858,7 @@ function App() {
           {/* Client profiles */}
           <Reveal className="client-section-label" delay={0.05}>
             <p className="section-tag" style={{ marginBottom: '1.2rem' }}>
-              Founders I have worked with
+              Some of the founders I&apos;ve worked with
             </p>
           </Reveal>
 
@@ -832,46 +868,21 @@ function App() {
                 as="article"
                 className="client-card"
                 key={client.name}
-                delay={i * 0.08}
+                delay={i * 0.1}
                 direction="up"
               >
-                {/* Glow behind avatar */}
+                {/* Per-card colour glow */}
                 <div
                   className="client-card-glow"
                   style={{
-                    background: `radial-gradient(circle, ${client.gradient[0]}33, transparent 70%)`,
+                    background: `radial-gradient(circle, ${client.gradient[0]}40, transparent 70%)`,
                   }}
                 />
 
-                <div className="client-avatar-wrap">
-                  <div
-                    className="client-avatar"
-                    style={{
-                      background: `linear-gradient(135deg, ${client.gradient[0]}, ${client.gradient[1]})`,
-                    }}
-                  >
-                    <img
-                      className="client-avatar-image"
-                      src={client.avatar}
-                      alt={client.name}
-                      loading="lazy"
-                      referrerPolicy="no-referrer"
-                      onError={(event) => {
-                        event.currentTarget.style.display = 'none'
-                      }}
-                    />
-                    <span className="client-avatar-fallback">
-                      {client.name.split(' ').map((n) => n[0]).join('')}
-                    </span>
-                  </div>
-                  {/* spinning ring */}
-                  <div
-                    className="client-avatar-ring"
-                    style={{
-                      borderColor: `${client.gradient[0]}55`,
-                    }}
-                  />
-                </div>
+                {/* Glass shimmer sweep */}
+                <div className="client-card-shimmer" />
+
+                <ClientAvatar client={client} />
 
                 <div className="client-info">
                   <h3 className="client-name">{client.name}</h3>
@@ -891,7 +902,7 @@ function App() {
                   rel="noreferrer"
                   style={{ '--accent-col': client.gradient[0] }}
                 >
-                  View LinkedIn →
+                  View on LinkedIn →
                 </a>
               </Reveal>
             ))}
@@ -1039,4 +1050,6 @@ function App() {
 }
 
 export default App
+
+
 
