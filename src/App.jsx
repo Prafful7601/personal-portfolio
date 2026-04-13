@@ -186,15 +186,15 @@ const projects = [
 const brandingClients = [
   {
     name: 'Divya Jain',
-    role: 'Founder, Safeducate',
-    tag: 'ET 40 Under Forty',
+    role: 'Founder, Safeducate · ET 40 Under Forty',
+    tag: 'Social Entrepreneur',
     href: 'https://www.linkedin.com/in/divyajainseekho/',
     photo: 'https://media.licdn.com/dms/image/v2/D5603AQGCD6efBxlI3Q/profile-displayphoto-scale_200_200/B56ZsxQAhDHkAY-/0/1766057840698?e=2147483647&v=beta&t=JTx7HFJkmEE-2iEOz3fYPn4foCfBY3SBeW2PEYOXw-U',
     gradient: ['#ff8a24', '#ffd27f'],
   },
   {
     name: 'Charu Agrawal',
-    role: 'Entrepreneur, Ishin Fashions',
+    role: 'Entrepreneur · Ishin Fashions',
     tag: 'D2C & Fashion',
     href: 'https://www.linkedin.com/in/charu-agrawal-511409178/',
     photo: 'https://media.licdn.com/dms/image/v2/D4D03AQE5VxCTvpX2mw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1684396364074?e=2147483647&v=beta&t=rgBivzO5WIwXbKpah7Y9t4hD4oxtkq1eYvdfb8RHCDs',
@@ -202,18 +202,18 @@ const brandingClients = [
   },
   {
     name: 'Sneha Jain',
-    role: 'Founder & Professional',
+    role: 'Director & Co-founder, Bay Leaf Chain Of Salons',
     tag: 'LinkedIn Growth',
     href: 'https://www.linkedin.com/in/sneha-jain-5a989015/',
-    photo: null,
+    photo: '/sneha-jain.jpg',
     gradient: ['#a855f7', '#e879f9'],
   },
   {
     name: 'Prateek Tosniwal',
-    role: 'Entrepreneur & Founder',
+    role: 'Partner, MICS International · Founder, Ivy Growth Associates',
     tag: 'Personal Brand',
     href: 'https://www.linkedin.com/in/prateektosniwal/',
-    photo: null,
+    photo: '/prateek-tosniwal.jpg',
     gradient: ['#3b82f6', '#93c5fd'],
   },
 ]
