@@ -4,7 +4,10 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  useMotionValue,
+  useInView,
 } from 'motion/react'
+import { useRef, useEffect, useState, useCallback } from 'react'
 import './App.css'
 
 const stats = [
@@ -204,56 +207,233 @@ const marquee = [
   'Rate Limiting',
 ]
 
-function Reveal({ children, className = '', delay = 0, as = 'div' }) {
+// ─── AnimatedCounter ──────────────────────────────────────────────────────────
+function AnimatedCounter({ value }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.6 })
+  const [display, setDisplay] = useState(value)
+  const animated = useRef(false)
+
+  useEffect(() => {
+    if (!isInView || animated.current) return
+    animated.current = true
+    const match = value.match(/^([<>]?)([\d,]+)(.*)$/)
+    if (!match) return
+    const prefix = match[1]
+    const numStr = match[2].replace(/,/g, '')
+    const suffix = match[3]
+    const target = parseInt(numStr, 10)
+    const hasComma = match[2].includes(',')
+    const startTime = performance.now()
+    const dur = 1700
+
+    function tick(now) {
+      const t = Math.min((now - startTime) / dur, 1)
+      const eased = 1 - Math.pow(1 - t, 4)
+      const current = Math.round(eased * target)
+      const fmt = hasComma ? current.toLocaleString() : String(current)
+      setDisplay(`${prefix}${fmt}${suffix}`)
+      if (t < 1) requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+  }, [isInView, value])
+
+  return <span ref={ref}>{display}</span>
+}
+
+// ─── SplitWords ───────────────────────────────────────────────────────────────
+function SplitWords({ text, className, delay = 0 }) {
+  const words = text.split(' ')
+  return (
+    <h1 className={className}>
+      {words.map((word, i) => (
+        <span key={i} className="word-outer">
+          <motion.span
+            className="word-inner"
+            initial={{ y: '105%', opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.68,
+              delay: delay + i * 0.055,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            {word}
+          </motion.span>
+        </span>
+      ))}
+    </h1>
+  )
+}
+
+// ─── TerminalBlock ────────────────────────────────────────────────────────────
+const terminalLines = [
+  '$ prafful.direction',
+  '{',
+  "  coming_from: ['life-sciences', 'content-strategy'],",
+  "  now_building: ['apis', 'systems', 'distributed-backends'],",
+  "  going_to: 'ownership-heavy backend engineering',",
+  "  base: 'Delhi, India'",
+  '}',
+]
+
+function TerminalBlock({ prefersReducedMotion }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.3 })
+
+  return (
+    <motion.div
+      ref={ref}
+      className="terminal-card"
+      animate={prefersReducedMotion ? {} : { y: [0, -8, 0] }}
+      transition={{ duration: 5.6, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+    >
+      <div className="terminal-head">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="terminal-body">
+        {terminalLines.map((line, i) => (
+          <motion.p
+            key={i}
+            initial={{ opacity: 0, x: -8 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ delay: 0.2 + i * 0.12, duration: 0.22, ease: 'easeOut' }}
+          >
+            {line}
+          </motion.p>
+        ))}
+        <motion.span
+          className="terminal-cursor"
+          animate={isInView ? { opacity: [1, 0, 1] } : { opacity: 0 }}
+          transition={{ repeat: Number.POSITIVE_INFINITY, duration: 0.85, ease: 'steps(1)' }}
+        >
+          _
+        </motion.span>
+      </div>
+    </motion.div>
+  )
+}
+
+// ─── Reveal ───────────────────────────────────────────────────────────────────
+function Reveal({ children, className = '', delay = 0, as = 'div', direction = 'up', tilt = false }) {
   const Component = motion[as]
+  const ref = useRef(null)
+
+  const rotX = useMotionValue(0)
+  const rotY = useMotionValue(0)
+  const sX = useSpring(rotX, { stiffness: 220, damping: 24 })
+  const sY = useSpring(rotY, { stiffness: 220, damping: 24 })
+
+  const handleMove = useCallback(
+    (e) => {
+      if (!tilt || !ref.current) return
+      const rect = ref.current.getBoundingClientRect()
+      const cx = rect.left + rect.width / 2
+      const cy = rect.top + rect.height / 2
+      rotX.set(((e.clientY - cy) / rect.height) * -8)
+      rotY.set(((e.clientX - cx) / rect.width) * 8)
+    },
+    [tilt, rotX, rotY],
+  )
+
+  const handleLeave = useCallback(() => {
+    rotX.set(0)
+    rotY.set(0)
+  }, [rotX, rotY])
+
+  const variants = {
+    up:    { initial: { opacity: 0, y: 36 },   animate: { opacity: 1, y: 0 } },
+    down:  { initial: { opacity: 0, y: -28 },  animate: { opacity: 1, y: 0 } },
+    left:  { initial: { opacity: 0, x: -36 },  animate: { opacity: 1, x: 0 } },
+    right: { initial: { opacity: 0, x: 36 },   animate: { opacity: 1, x: 0 } },
+    scale: { initial: { opacity: 0, scale: 0.93 }, animate: { opacity: 1, scale: 1 } },
+    fade:  { initial: { opacity: 0 },          animate: { opacity: 1 } },
+  }
+  const { initial, animate } = variants[direction] || variants.up
 
   return (
     <Component
+      ref={ref}
       className={className}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.22 }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      initial={initial}
+      whileInView={animate}
+      viewport={{ once: true, amount: 0.16 }}
+      transition={{ duration: 0.72, delay, ease: [0.22, 1, 0.36, 1] }}
+      style={
+        tilt
+          ? { rotateX: sX, rotateY: sY, transformStyle: 'preserve-3d', transformPerspective: 900 }
+          : undefined
+      }
+      onMouseMove={tilt ? handleMove : undefined}
+      onMouseLeave={tilt ? handleLeave : undefined}
     >
       {children}
     </Component>
   )
 }
 
+// ─── App ──────────────────────────────────────────────────────────────────────
 function App() {
   const prefersReducedMotion = useReducedMotion()
   const { scrollYProgress } = useScroll()
   const progressScale = useSpring(scrollYProgress, { stiffness: 140, damping: 24 })
-  const heroOrbY = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -220])
-  const heroCopyY = useTransform(scrollYProgress, [0, 0.28], [0, prefersReducedMotion ? 0 : -80])
-  const heroPanelY = useTransform(scrollYProgress, [0, 0.28], [0, prefersReducedMotion ? 0 : 95])
-  const heroPanelRotate = useTransform(
-    scrollYProgress,
-    [0, 0.28],
-    [0, prefersReducedMotion ? 0 : -6],
+
+  const heroOrbY     = useTransform(scrollYProgress, [0, 1],    [0, prefersReducedMotion ? 0 : -220])
+  const heroCopyY    = useTransform(scrollYProgress, [0, 0.28], [0, prefersReducedMotion ? 0 : -80])
+  const heroPanelY   = useTransform(scrollYProgress, [0, 0.28], [0, prefersReducedMotion ? 0 : 95])
+  const heroPanelRotate = useTransform(scrollYProgress, [0, 0.28], [0, prefersReducedMotion ? 0 : -6])
+  const bgYSlow      = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -120])
+  const bgYMedium    = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 180])
+  const bgYFast      = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 280])
+  const bgRotate     = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 18])
+  const bgScale      = useTransform(scrollYProgress, [0, 1], [1, prefersReducedMotion ? 1 : 1.14])
+  const ghostX       = useTransform(scrollYProgress, [0, 1], ['-4%', prefersReducedMotion ? '-4%' : '8%'])
+  const ghostXReverse = useTransform(scrollYProgress, [0, 1], ['6%', prefersReducedMotion ? '6%' : '-6%'])
+  const gridOpacity  = useTransform(scrollYProgress, [0, 0.3, 1], [0.22, 0.34, 0.16])
+
+  // Cursor glow
+  const rawMouseX = useMotionValue(-400)
+  const rawMouseY = useMotionValue(-400)
+  const cursorX   = useSpring(rawMouseX, { stiffness: 560, damping: 36 })
+  const cursorY   = useSpring(rawMouseY, { stiffness: 560, damping: 36 })
+  const glowX     = useTransform(cursorX, (v) => v - 192)
+  const glowY     = useTransform(cursorY, (v) => v - 192)
+
+  const handleMouseMove = useCallback(
+    (e) => {
+      rawMouseX.set(e.clientX)
+      rawMouseY.set(e.clientY)
+    },
+    [rawMouseX, rawMouseY],
   )
-  const bgYSlow = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -120])
-  const bgYMedium = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 180])
-  const bgYFast = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 280])
-  const bgRotate = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 18])
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1, prefersReducedMotion ? 1 : 1.14])
-  const ghostX = useTransform(scrollYProgress, [0, 1], ['-4%', prefersReducedMotion ? '-4%' : '8%'])
-  const ghostXReverse = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ['6%', prefersReducedMotion ? '6%' : '-6%'],
-  )
-  const gridOpacity = useTransform(scrollYProgress, [0, 0.3, 1], [0.22, 0.34, 0.16])
 
   return (
-    <div className="page-shell">
+    <div
+      className="page-shell"
+      onMouseMove={prefersReducedMotion ? undefined : handleMouseMove}
+    >
+      {/* Cursor glow */}
+      {!prefersReducedMotion && (
+        <motion.div className="cursor-glow" style={{ x: glowX, y: glowY }} aria-hidden="true" />
+      )}
+
       <motion.div className="progress-bar" style={{ scaleX: progressScale }} />
+
       <div className="parallax-stage" aria-hidden="true">
         <motion.div className="parallax-grid" style={{ y: bgYSlow, opacity: gridOpacity }} />
-        <motion.div className="parallax-rings" style={{ y: bgYMedium, rotate: bgRotate, scale: bgScale }} />
+        <motion.div
+          className="parallax-rings"
+          style={{ y: bgYMedium, rotate: bgRotate, scale: bgScale }}
+        />
         <motion.div className="parallax-beam parallax-beam-a" style={{ y: bgYFast }} />
         <motion.div className="parallax-beam parallax-beam-b" style={{ y: bgYMedium }} />
-        <motion.div className="parallax-ghost parallax-ghost-a" style={{ y: bgYMedium, x: ghostX }}>
+        <motion.div
+          className="parallax-ghost parallax-ghost-a"
+          style={{ y: bgYMedium, x: ghostX }}
+        >
           SYSTEMS
         </motion.div>
         <motion.div
@@ -263,6 +443,7 @@ function App() {
           SCALE
         </motion.div>
       </div>
+
       <motion.div className="ambient-orb ambient-orb-a" style={{ y: heroOrbY }} />
       <motion.div className="ambient-orb ambient-orb-b" style={{ y: heroOrbY }} />
       <motion.div className="ambient-orb ambient-orb-c" style={{ y: heroOrbY }} />
@@ -293,22 +474,27 @@ function App() {
       </header>
 
       <main>
+        {/* ── HERO ──────────────────────────────────────────────────────── */}
         <section className="hero-section" id="hero">
           <motion.div className="hero-copy" style={{ y: heroCopyY }}>
             <Reveal as="p" className="eyebrow">
               Backend engineering with product signal
             </Reveal>
-            <Reveal as="h1" delay={0.08}>
-              I build backend systems that feel fast, sharp, and impossible to ignore.
-            </Reveal>
-            <Reveal as="p" className="hero-text" delay={0.16}>
+
+            <SplitWords
+              text="I build backend systems that feel fast, sharp, and impossible to ignore."
+              className="hero-h1"
+              delay={0.08}
+            />
+
+            <Reveal as="p" className="hero-text" delay={0.2}>
               I am a Delhi-based backend-focused software engineer pursuing an MCA and
               building toward distributed systems, scalable APIs, and engineering roles
               with real ownership. My edge is unusual but useful: I understand both the
               machine and the market.
             </Reveal>
 
-            <Reveal className="hero-actions" delay={0.24}>
+            <Reveal className="hero-actions" delay={0.28}>
               <a className="button button-primary" href="mailto:praffulunabated@gmail.com">
                 Hire me for backend roles
               </a>
@@ -330,7 +516,7 @@ function App() {
               </a>
             </Reveal>
 
-            <Reveal as="ul" className="signal-strip" delay={0.32}>
+            <Reveal as="ul" className="signal-strip" delay={0.36}>
               <li>Java + Spring Boot</li>
               <li>Distributed systems</li>
               <li>Concurrency + transactions</li>
@@ -345,34 +531,10 @@ function App() {
             whileHover={prefersReducedMotion ? {} : { rotate: -2, scale: 1.01 }}
             transition={{ type: 'spring', stiffness: 160, damping: 18 }}
           >
-            <div className="panel-grid"></div>
-            <div className="panel-scan"></div>
-            <motion.div
-              className="terminal-card"
-              animate={
-                prefersReducedMotion
-                  ? {}
-                  : {
-                      y: [0, -8, 0],
-                    }
-              }
-              transition={{ duration: 5.6, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
-            >
-              <div className="terminal-head">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-              <div className="terminal-body">
-                <p>$ prafful.direction</p>
-                <p>{'{'}</p>
-                <p>&nbsp;&nbsp;coming_from: ['life-sciences', 'content-strategy'],</p>
-                <p>&nbsp;&nbsp;now_building: ['apis', 'systems', 'distributed-backends'],</p>
-                <p>&nbsp;&nbsp;going_to: 'ownership-heavy backend engineering',</p>
-                <p>&nbsp;&nbsp;base: 'Delhi, India'</p>
-                <p>{'}'}</p>
-              </div>
-            </motion.div>
+            <div className="panel-grid" />
+            <div className="panel-scan" />
+
+            <TerminalBlock prefersReducedMotion={prefersReducedMotion} />
 
             <motion.div
               className="floating-card floating-card-a"
@@ -396,40 +558,60 @@ function App() {
               transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
             >
               <strong>10k+</strong>
-              <span>requests per minute handled in rate-limiting work</span>
+              <span>requests per minute handled</span>
             </motion.div>
           </motion.div>
         </section>
 
+        {/* ── MARQUEE ───────────────────────────────────────────────────── */}
         <section className="marquee-shell" aria-label="Focus areas">
           <div className="marquee-track">
             {[...marquee, ...marquee].map((item, index) => (
-              <span className="marquee-chip" key={`${item}-${index}`}>
+              <span className="marquee-chip" key={`a-${item}-${index}`}>
+                {item}
+              </span>
+            ))}
+          </div>
+          <div className="marquee-track marquee-track-reverse">
+            {[...marquee, ...marquee].map((item, index) => (
+              <span className="marquee-chip marquee-chip-muted" key={`b-${item}-${index}`}>
                 {item}
               </span>
             ))}
           </div>
         </section>
 
+        {/* ── METRICS ───────────────────────────────────────────────────── */}
         <section className="metrics-section">
           {stats.map((stat, index) => (
-            <Reveal as="article" className="metric-card" key={stat.label} delay={index * 0.05}>
-              <p className="metric-value">{stat.value}</p>
+            <Reveal
+              as="article"
+              className="metric-card"
+              key={stat.label}
+              delay={index * 0.06}
+              direction="scale"
+            >
+              <p className="metric-value">
+                <AnimatedCounter value={stat.value} />
+              </p>
               <p className="metric-label">{stat.label}</p>
             </Reveal>
           ))}
         </section>
 
-        <Reveal className="positioning-band" delay={0.05}>
+        <Reveal className="positioning-band" delay={0.05} direction="fade">
           <p>
             I know how to make systems work under pressure and how to make good work
             impossible to ignore.
           </p>
         </Reveal>
 
+        {/* ── STORY ─────────────────────────────────────────────────────── */}
         <section className="content-section" id="story">
           <Reveal className="section-heading">
-            <p className="section-tag">Story</p>
+            <p className="section-tag">
+              <span className="section-num">01</span> Story
+            </p>
             <h2>Where I am coming from, and where I am going.</h2>
           </Reveal>
 
@@ -439,7 +621,8 @@ function App() {
                 as="article"
                 className="trajectory-card"
                 key={item.label}
-                delay={index * 0.08}
+                delay={index * 0.09}
+                direction={index === 0 ? 'left' : 'right'}
               >
                 <p className="mini-label">{item.label}</p>
                 <h3>{item.title}</h3>
@@ -450,7 +633,14 @@ function App() {
 
           <div className="focus-grid">
             {focusCards.map((card, index) => (
-              <Reveal as="article" className="focus-card" key={card.title} delay={index * 0.08}>
+              <Reveal
+                as="article"
+                className="focus-card"
+                key={card.title}
+                delay={index * 0.08}
+                direction="scale"
+                tilt
+              >
                 <span className="focus-tag">{card.tag}</span>
                 <h3>{card.title}</h3>
                 <p>{card.text}</p>
@@ -475,15 +665,24 @@ function App() {
           </Reveal>
         </section>
 
+        {/* ── EXPERIENCE ────────────────────────────────────────────────── */}
         <section className="content-section" id="work" aria-labelledby="experience-title">
           <Reveal className="section-heading">
-            <p className="section-tag">Experience</p>
+            <p className="section-tag">
+              <span className="section-num">02</span> Experience
+            </p>
             <h2 id="experience-title">Work that sharpened both technical depth and leverage.</h2>
           </Reveal>
 
           <div className="timeline">
             {experience.map((item, index) => (
-              <Reveal as="article" className="timeline-item" key={item.role} delay={index * 0.07}>
+              <Reveal
+                as="article"
+                className="timeline-item"
+                key={item.role}
+                delay={index * 0.07}
+                direction="left"
+              >
                 <div className="timeline-meta">
                   <p>{item.period}</p>
                 </div>
@@ -501,15 +700,25 @@ function App() {
           </div>
         </section>
 
+        {/* ── SKILLS ────────────────────────────────────────────────────── */}
         <section className="content-section" id="skills">
           <Reveal className="section-heading">
-            <p className="section-tag">Skills</p>
+            <p className="section-tag">
+              <span className="section-num">03</span> Skills
+            </p>
             <h2>The full stack of what I bring to the table.</h2>
           </Reveal>
 
           <div className="skills-grid">
             {skillGroups.map((group, index) => (
-              <Reveal as="article" className="skill-card" key={group.title} delay={index * 0.04}>
+              <Reveal
+                as="article"
+                className="skill-card"
+                key={group.title}
+                delay={index * 0.05}
+                direction="scale"
+                tilt
+              >
                 <h3>{group.title}</h3>
                 <ul className="skill-chip-list">
                   {group.items.map((item) => (
@@ -521,26 +730,31 @@ function App() {
           </div>
         </section>
 
+        {/* ── PROJECTS ──────────────────────────────────────────────────── */}
         <section className="content-section" id="projects">
           <Reveal className="section-heading">
-            <p className="section-tag">Projects</p>
+            <p className="section-tag">
+              <span className="section-num">04</span> Projects
+            </p>
             <h2>Projects that make my backend instincts visible.</h2>
           </Reveal>
 
           <div className="project-grid">
             {projects.map((project, index) => (
-              <Reveal as="article" className="project-card" key={project.name} delay={index * 0.08}>
-                <div className="project-aura"></div>
+              <Reveal
+                as="article"
+                className="project-card"
+                key={project.name}
+                delay={index * 0.09}
+                direction="scale"
+                tilt
+              >
+                <div className="project-aura" />
                 <div className="project-topline">
                   <h3>{project.name}</h3>
                   <div className="project-links">
                     {project.links.map((link) => (
-                      <a
-                        key={link.href}
-                        href={link.href}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
+                      <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
                         {link.label}
                       </a>
                     ))}
@@ -565,8 +779,9 @@ function App() {
           </div>
         </section>
 
+        {/* ── EDUCATION + CERTS ─────────────────────────────────────────── */}
         <section className="content-section two-column-grid">
-          <Reveal as="article" className="info-card">
+          <Reveal as="article" className="info-card" direction="left">
             <p className="section-tag">Education</p>
             <h3>Formal foundation</h3>
             <ul>
@@ -576,7 +791,7 @@ function App() {
             </ul>
           </Reveal>
 
-          <Reveal as="article" className="info-card" delay={0.08}>
+          <Reveal as="article" className="info-card" delay={0.09} direction="right">
             <p className="section-tag">Certifications</p>
             <h3>Applied learning</h3>
             <ul>
@@ -587,7 +802,8 @@ function App() {
           </Reveal>
         </section>
 
-        <Reveal className="contact-band" id="contact">
+        {/* ── CONTACT ───────────────────────────────────────────────────── */}
+        <Reveal className="contact-band" id="contact" direction="scale" delay={0.05}>
           <div>
             <p className="section-tag">Contact</p>
             <h2>Open to backend roles, serious projects, and ambitious teams.</h2>
