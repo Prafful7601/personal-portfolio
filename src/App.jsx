@@ -11,8 +11,8 @@ import { useRef, useEffect, useState, useCallback } from 'react'
 import './App.css'
 
 const stats = [
-  { value: '10M+', label: 'LinkedIn impressions generated across founder profiles' },
-  { value: '30+', label: 'founders and professionals helped with positioning' },
+  { value: '10M+', label: 'impressions generated across founder and creator profiles' },
+  { value: '30+', label: 'founders and professionals helped grow their presence' },
   { value: '1,000+', label: 'ERP users supported through backend systems' },
   { value: '10k+', label: 'requests per minute handled in rate limiting work' },
   { value: '<800ms', label: 'API latency after backend optimization' },
@@ -27,9 +27,9 @@ const journey = [
   },
   {
     label: 'Where I am going',
-    title: 'Toward backend, IoT, and applied AI systems with real-world impact.',
+    title: 'Toward scalable tech, stronger backend ownership, and helping founders grow across socials.',
     text:
-      'I am now compounding around distributed systems, API performance, transactional integrity, caching, and applied AI systems that move beyond software alone. That direction now includes IoT-driven problem solving and invention-led work.',
+      'My long-term direction is not just one patent or one device. It is building scalable technology, owning backend systems that matter, and continuing to help founders and professionals grow their authority across LinkedIn and other social platforms through better positioning, profiles, and content systems.',
   },
 ]
 
@@ -42,23 +42,23 @@ const focusCards = [
   },
   {
     tag: 'Signal',
-    title: 'A sharper sense for product and distribution',
+    title: 'A sharper sense for product, positioning, and distribution',
     text:
-      'I understand not only how systems work, but how good work gets noticed and trusted.',
+      'I understand not only how systems work, but how people, products, and expertise get noticed and trusted.',
   },
   {
     tag: 'Trajectory',
     title: 'Engineering direction with intent',
     text:
-      'I am optimizing toward backend-heavy roles while moving into AI, IoT, and invention-led systems work.',
+      'I am optimizing toward backend-heavy roles while continuing to build founder brands and scalable growth systems.',
   },
 ]
 
 const upcomingPatent = {
-  tag: 'Coming Soon',
-  title: 'An IoT patent in precision agriculture is part of where I am headed.',
+  tag: 'Patent Filing',
+  title: 'An AI + IoT precision-agriculture patent is one active thread of my work, not the whole future.',
   summary:
-    'The proposed invention is an AI-based pest detection and automated pesticide administration device for precision agriculture. It uses a camera module to capture insect images or crop-damage patterns, identifies pest species with machine learning, selects the appropriate treatment based on pest type and crop stage, and triggers precision spraying in controlled quantities.',
+    'The proposed invention is an AI-based pest detection and automated pesticide administration device for precision agriculture. It captures insect images and crop-damage patterns, identifies pest species with machine learning, determines the correct treatment based on pest type and crop growth stage, and triggers precision spraying in controlled quantities. It shows my interest in applied systems that combine software, machine intelligence, and real-world automation.',
   points: [
     'Combines computer vision, machine learning, IoT hardware, and automated actuation.',
     'Targets high-accuracy pest identification from insects and leaf-bite damage patterns.',
@@ -189,6 +189,7 @@ const brandingClients = [
     role: 'Founder, Safeducate',
     tag: 'ET 40 Under Forty',
     href: 'https://www.linkedin.com/in/divyajainseekho/',
+    avatar: 'https://unavatar.io/linkedin/divyajainseekho',
     gradient: ['#ff8a24', '#ffd27f'],
   },
   {
@@ -196,6 +197,7 @@ const brandingClients = [
     role: 'Entrepreneur, Ishin Fashions',
     tag: 'D2C & Fashion',
     href: 'https://www.linkedin.com/in/charu-agrawal-511409178/',
+    avatar: 'https://unavatar.io/linkedin/charu-agrawal-511409178',
     gradient: ['#3fd4b4', '#9ae9c2'],
   },
   {
@@ -203,6 +205,7 @@ const brandingClients = [
     role: 'Founder & Professional',
     tag: 'LinkedIn Growth',
     href: 'https://www.linkedin.com/in/sneha-jain-5a989015/',
+    avatar: 'https://unavatar.io/linkedin/sneha-jain-5a989015',
     gradient: ['#a855f7', '#e879f9'],
   },
   {
@@ -210,6 +213,7 @@ const brandingClients = [
     role: 'Entrepreneur & Founder',
     tag: 'Personal Brand',
     href: 'https://www.linkedin.com/in/prateektosniwal/',
+    avatar: 'https://unavatar.io/linkedin/prateektosniwal',
     gradient: ['#3b82f6', '#93c5fd'],
   },
 ]
@@ -217,13 +221,13 @@ const brandingClients = [
 const brandingPillars = [
   {
     tag: 'Positioning',
-    title: 'Profile that earns authority',
-    text: 'Headline, about, and featured rewritten to attract the right audience and inbound opportunities.',
+    title: 'Founder profile that earns authority',
+    text: 'Headline, about, and featured rebuilt so founders look sharper, clearer, and more credible online.',
   },
   {
     tag: 'Content',
     title: 'System over inspiration',
-    text: 'Repeatable frameworks for ideation, writing, and publishing at a consistent cadence.',
+    text: 'Repeatable frameworks for ideation, writing, and publishing at a consistent cadence across platforms.',
   },
   {
     tag: 'Narrative',
@@ -232,8 +236,8 @@ const brandingPillars = [
   },
   {
     tag: 'Distribution',
-    title: 'Growth with intent',
-    text: 'Engagement patterns, posting windows, and niche targeting to grow followers who convert.',
+    title: 'Growth across socials',
+    text: 'Distribution systems that help founders grow across LinkedIn and other socials with intent, not noise.',
   },
 ]
 
@@ -258,6 +262,7 @@ const marquee = [
   'Patent in Progress',
   'Founder Positioning',
   'Personal Branding',
+  'Multi-platform Social Growth',
   'Rate Limiting',
 ]
 
@@ -331,7 +336,7 @@ const terminalLines = [
   '{',
   "  coming_from: ['life-sciences', 'content-strategy'],",
   "  now_building: ['apis', 'systems', 'distributed-backends'],",
-  "  going_to: 'ownership-heavy backend engineering',",
+  "  going_to: 'scalable tech + founder growth systems',",
   "  base: 'Delhi, India'",
   '}',
 ]
@@ -538,20 +543,21 @@ function App() {
         <section className="hero-section" id="hero">
           <motion.div className="hero-copy" style={{ y: heroCopyY }}>
             <Reveal as="p" className="eyebrow">
-              Backend engineering with product signal
+              Scalable tech with founder-brand instincts
             </Reveal>
 
             <SplitWords
-              text="I build backend systems that feel fast, sharp, and impossible to ignore."
+                text="I build backend systems and founder profiles that are hard to ignore."
               className="hero-h1"
               delay={0.08}
             />
 
             <Reveal as="p" className="hero-text" delay={0.2}>
-              I am a Delhi-based backend-focused software engineer pursuing an MCA and
-              building toward distributed systems, scalable APIs, and engineering roles
-              with real ownership. My edge is unusual but useful: I understand both the
-              machine and the market.
+                I am a Delhi-based software engineer focused on scalable backend systems,
+                distributed architecture, and API performance. Alongside that, I help
+                founders build sharper profiles, stronger positioning, and repeatable
+                growth across LinkedIn and other socials. My edge lives in the
+                intersection: scalable tech on one side, social leverage on the other.
             </Reveal>
 
             <Reveal className="hero-actions" delay={0.28}>
@@ -661,8 +667,7 @@ function App() {
 
         <Reveal className="positioning-band" delay={0.05} direction="fade">
           <p>
-            I know how to make systems work under pressure and how to make good work
-            impossible to ignore.
+            I build scalable tech and founder profiles that are hard to ignore.
           </p>
         </Reveal>
 
@@ -766,7 +771,7 @@ function App() {
             <p className="section-tag">
               <span className="section-num">03</span> Branding
             </p>
-            <h2>Scalable systems for founders who want to be impossible to ignore.</h2>
+            <h2>I build founder profiles and help people grow across socials.</h2>
           </Reveal>
 
           {/* Branding intro + pillars */}
@@ -774,9 +779,11 @@ function App() {
             <Reveal className="branding-intro-card" direction="left">
               <p className="section-tag" style={{ marginBottom: '1rem' }}>The Viral Vibe</p>
               <p className="branding-intro-text">
-                I built a personal branding and LinkedIn growth initiative that helped 30+
-                founders turn their profiles into assets. The core insight: most founders
-                have real signal — they just need a system to make it visible and repeatable.
+                I built a founder-growth initiative that helps people sharpen their
+                profiles, improve positioning, and grow their presence across LinkedIn
+                and other socials. The core insight: most founders already have signal;
+                they just need the right profile architecture, content system, and
+                distribution loop to make it visible.
               </p>
               <div className="branding-stat-row">
                 <div className="branding-stat">
@@ -843,7 +850,19 @@ function App() {
                       background: `linear-gradient(135deg, ${client.gradient[0]}, ${client.gradient[1]})`,
                     }}
                   >
-                    {client.name.split(' ').map((n) => n[0]).join('')}
+                    <img
+                      className="client-avatar-image"
+                      src={client.avatar}
+                      alt={client.name}
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      onError={(event) => {
+                        event.currentTarget.style.display = 'none'
+                      }}
+                    />
+                    <span className="client-avatar-fallback">
+                      {client.name.split(' ').map((n) => n[0]).join('')}
+                    </span>
                   </div>
                   {/* spinning ring */}
                   <div
@@ -1020,3 +1039,4 @@ function App() {
 }
 
 export default App
+
