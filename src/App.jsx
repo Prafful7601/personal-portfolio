@@ -242,20 +242,24 @@ function AnimatedCounter({ value }) {
 }
 
 // ─── SplitWords ───────────────────────────────────────────────────────────────
+// Uses useInView on the h1 itself (not whileInView on children) so it fires
+// reliably even inside overflow:hidden parents.
 function SplitWords({ text, className, delay = 0 }) {
   const words = text.split(' ')
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0 })
+
   return (
-    <h1 className={className}>
+    <h1 ref={ref} className={className}>
       {words.map((word, i) => (
         <span key={i} className="word-outer">
           <motion.span
             className="word-inner"
-            initial={{ y: '105%', opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
+            initial={{ y: '100%', opacity: 0 }}
+            animate={isInView ? { y: 0, opacity: 1 } : {}}
             transition={{
-              duration: 0.68,
-              delay: delay + i * 0.055,
+              duration: 0.72,
+              delay: delay + i * 0.052,
               ease: [0.22, 1, 0.36, 1],
             }}
           >
@@ -318,7 +322,7 @@ function TerminalBlock({ prefersReducedMotion }) {
 }
 
 // ─── Reveal ───────────────────────────────────────────────────────────────────
-function Reveal({ children, className = '', delay = 0, as = 'div', direction = 'up', tilt = false }) {
+function Reveal({ children, className = '', delay = 0, as = 'div', direction = 'up', tilt = false, ...props }) {
   const Component = motion[as]
   const ref = useRef(null)
 
@@ -369,6 +373,7 @@ function Reveal({ children, className = '', delay = 0, as = 'div', direction = '
       }
       onMouseMove={tilt ? handleMove : undefined}
       onMouseLeave={tilt ? handleLeave : undefined}
+      {...props}
     >
       {children}
     </Component>

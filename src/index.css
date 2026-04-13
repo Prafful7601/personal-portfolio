@@ -40,9 +40,16 @@ body {
   min-height: 100vh;
   color: var(--text);
   background:
-    radial-gradient(circle at top, rgba(255, 138, 36, 0.1), transparent 28%),
-    radial-gradient(circle at 85% 20%, rgba(63, 212, 180, 0.1), transparent 22%),
-    linear-gradient(180deg, #0a1020 0%, #070b16 48%, #060811 100%);
+    /* warm orange bloom at top-center */
+    radial-gradient(ellipse 110% 55% at 50% -5%, rgba(255, 120, 20, 0.28) 0%, transparent 65%),
+    /* teal bloom top-right */
+    radial-gradient(ellipse 70% 60% at 92% 22%, rgba(52, 210, 175, 0.18) 0%, transparent 60%),
+    /* indigo/violet bloom bottom-left */
+    radial-gradient(ellipse 90% 55% at -8% 85%, rgba(110, 90, 255, 0.16) 0%, transparent 60%),
+    /* soft purple mid-right */
+    radial-gradient(ellipse 55% 45% at 88% 75%, rgba(160, 80, 220, 0.1) 0%, transparent 55%),
+    /* base gradient */
+    linear-gradient(170deg, #090d1f 0%, #070b18 45%, #060810 100%);
 }
 
 a,
