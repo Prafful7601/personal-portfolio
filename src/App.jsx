@@ -183,6 +183,60 @@ const projects = [
   },
 ]
 
+const brandingClients = [
+  {
+    name: 'Divya Jain',
+    role: 'Founder, Safeducate',
+    tag: 'ET 40 Under Forty',
+    href: 'https://www.linkedin.com/in/divyajainseekho/',
+    gradient: ['#ff8a24', '#ffd27f'],
+  },
+  {
+    name: 'Charu Agrawal',
+    role: 'Entrepreneur, Ishin Fashions',
+    tag: 'D2C & Fashion',
+    href: 'https://www.linkedin.com/in/charu-agrawal-511409178/',
+    gradient: ['#3fd4b4', '#9ae9c2'],
+  },
+  {
+    name: 'Sneha Jain',
+    role: 'Founder & Professional',
+    tag: 'LinkedIn Growth',
+    href: 'https://www.linkedin.com/in/sneha-jain-5a989015/',
+    gradient: ['#a855f7', '#e879f9'],
+  },
+  {
+    name: 'Prateek Tosniwal',
+    role: 'Entrepreneur & Founder',
+    tag: 'Personal Brand',
+    href: 'https://www.linkedin.com/in/prateektosniwal/',
+    gradient: ['#3b82f6', '#93c5fd'],
+  },
+]
+
+const brandingPillars = [
+  {
+    tag: 'Positioning',
+    title: 'Profile that earns authority',
+    text: 'Headline, about, and featured rewritten to attract the right audience and inbound opportunities.',
+  },
+  {
+    tag: 'Content',
+    title: 'System over inspiration',
+    text: 'Repeatable frameworks for ideation, writing, and publishing at a consistent cadence.',
+  },
+  {
+    tag: 'Narrative',
+    title: 'Story that creates pull',
+    text: 'Structuring the founder arc so it builds trust, earns credibility, and converts attention.',
+  },
+  {
+    tag: 'Distribution',
+    title: 'Growth with intent',
+    text: 'Engagement patterns, posting windows, and niche targeting to grow followers who convert.',
+  },
+]
+
 const certifications = [
   'Skyscanner Software Engineering Job Simulation',
   'Wells Fargo Software Engineering Job Simulation',
@@ -464,6 +518,7 @@ function App() {
 
         <nav className="topnav" aria-label="Primary">
           <a href="#story">Story</a>
+          <a href="#branding">Branding</a>
           <a href="#skills">Skills</a>
           <a href="#projects">Projects</a>
           <a href="#contact">Contact</a>
@@ -705,11 +760,130 @@ function App() {
           </div>
         </section>
 
+        {/* ── BRANDING ──────────────────────────────────────────────────── */}
+        <section className="content-section" id="branding">
+          <Reveal className="section-heading">
+            <p className="section-tag">
+              <span className="section-num">03</span> Branding
+            </p>
+            <h2>Scalable systems for founders who want to be impossible to ignore.</h2>
+          </Reveal>
+
+          {/* Branding intro + pillars */}
+          <div className="branding-top-grid">
+            <Reveal className="branding-intro-card" direction="left">
+              <p className="section-tag" style={{ marginBottom: '1rem' }}>The Viral Vibe</p>
+              <p className="branding-intro-text">
+                I built a personal branding and LinkedIn growth initiative that helped 30+
+                founders turn their profiles into assets. The core insight: most founders
+                have real signal — they just need a system to make it visible and repeatable.
+              </p>
+              <div className="branding-stat-row">
+                <div className="branding-stat">
+                  <span className="branding-stat-value">10M+</span>
+                  <span className="branding-stat-label">impressions generated</span>
+                </div>
+                <div className="branding-stat">
+                  <span className="branding-stat-value">30+</span>
+                  <span className="branding-stat-label">founders helped</span>
+                </div>
+                <div className="branding-stat">
+                  <span className="branding-stat-value">2+ yrs</span>
+                  <span className="branding-stat-label">of content systems built</span>
+                </div>
+              </div>
+            </Reveal>
+
+            <div className="branding-pillars-grid">
+              {brandingPillars.map((p, i) => (
+                <Reveal
+                  as="article"
+                  className="branding-pillar"
+                  key={p.tag}
+                  delay={i * 0.07}
+                  direction="scale"
+                  tilt
+                >
+                  <span className="focus-tag">{p.tag}</span>
+                  <h3>{p.title}</h3>
+                  <p>{p.text}</p>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+
+          {/* Client profiles */}
+          <Reveal className="client-section-label" delay={0.05}>
+            <p className="section-tag" style={{ marginBottom: '1.2rem' }}>
+              Founders I have worked with
+            </p>
+          </Reveal>
+
+          <div className="client-grid">
+            {brandingClients.map((client, i) => (
+              <Reveal
+                as="article"
+                className="client-card"
+                key={client.name}
+                delay={i * 0.08}
+                direction="up"
+              >
+                {/* Glow behind avatar */}
+                <div
+                  className="client-card-glow"
+                  style={{
+                    background: `radial-gradient(circle, ${client.gradient[0]}33, transparent 70%)`,
+                  }}
+                />
+
+                <div className="client-avatar-wrap">
+                  <div
+                    className="client-avatar"
+                    style={{
+                      background: `linear-gradient(135deg, ${client.gradient[0]}, ${client.gradient[1]})`,
+                    }}
+                  >
+                    {client.name.split(' ').map((n) => n[0]).join('')}
+                  </div>
+                  {/* spinning ring */}
+                  <div
+                    className="client-avatar-ring"
+                    style={{
+                      borderColor: `${client.gradient[0]}55`,
+                    }}
+                  />
+                </div>
+
+                <div className="client-info">
+                  <h3 className="client-name">{client.name}</h3>
+                  <p className="client-role">{client.role}</p>
+                  <span
+                    className="client-tag"
+                    style={{ color: client.gradient[0], borderColor: `${client.gradient[0]}44` }}
+                  >
+                    {client.tag}
+                  </span>
+                </div>
+
+                <a
+                  className="client-linkedin-btn"
+                  href={client.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ '--accent-col': client.gradient[0] }}
+                >
+                  View LinkedIn →
+                </a>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
         {/* ── SKILLS ────────────────────────────────────────────────────── */}
         <section className="content-section" id="skills">
           <Reveal className="section-heading">
             <p className="section-tag">
-              <span className="section-num">03</span> Skills
+              <span className="section-num">04</span> Skills
             </p>
             <h2>The full stack of what I bring to the table.</h2>
           </Reveal>
@@ -739,7 +913,7 @@ function App() {
         <section className="content-section" id="projects">
           <Reveal className="section-heading">
             <p className="section-tag">
-              <span className="section-num">04</span> Projects
+              <span className="section-num">05</span> Projects
             </p>
             <h2>Projects that make my backend instincts visible.</h2>
           </Reveal>
