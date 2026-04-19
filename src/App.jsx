@@ -54,11 +54,25 @@ const focusCards = [
   },
 ]
 
+const smartSkinPatent = {
+  tag: 'Patent Filed',
+  title: 'Multimodal Smart-Skin Device for Real-Time Fatigue Analysis.',
+  summary:
+    'A flexible, skin-conformable wearable system that fuses EMG, PPG, skin temperature, and motion data through an AI pipeline to score fatigue in real time. Existing systems rely on single-signal inputs and miss the cross-signal patterns that reveal true physiological state. This invention captures the full picture.',
+  pipeline: 'Sensor Layer → Signal Processing → Data Fusion → AI Model → Fatigue Score → Alert System',
+  points: [
+    'Multimodal fusion of EMG, PPG, temperature, and motion replaces single-sensor detection.',
+    'Adaptive baseline modeling personalizes thresholds per individual, cutting false positives.',
+    'Flexible smart-skin architecture enables continuous non-intrusive wear in real environments.',
+    'Targets industrial safety, driver fatigue monitoring, and athletic performance optimization.',
+  ],
+}
+
 const upcomingPatent = {
   tag: 'Patent Filing',
   title: 'An AI + IoT precision-agriculture patent is one active thread of my work, not the whole future.',
   summary:
-    'The proposed invention is an AI-based pest detection and automated pesticide administration device for precision agriculture. It captures insect images and crop-damage patterns, identifies pest species with machine learning, determines the correct treatment based on pest type and crop growth stage, and triggers precision spraying in controlled quantities. It shows my interest in applied systems that combine software, machine intelligence, and real-world automation.',
+    'The proposed invention is an AI-based pest detection and automated pesticide administration device for precision agriculture. It captures insect images and crop-damage patterns, identifies pest species with machine learning, determines the correct treatment based on pest type and crop growth stage, and triggers precision spraying in controlled quantities.',
   points: [
     'Combines computer vision, machine learning, IoT hardware, and automated actuation.',
     'Targets high-accuracy pest identification from insects and leaf-bite damage patterns.',
@@ -515,6 +529,9 @@ function App() {
       className="page-shell"
       onMouseMove={prefersReducedMotion ? undefined : handleMouseMove}
     >
+      {/* Film-grain noise texture */}
+      <div className="noise-layer" aria-hidden="true" />
+
       {/* Cursor glow */}
       {!prefersReducedMotion && (
         <motion.div className="cursor-glow" style={{ x: glowX, y: glowY }} aria-hidden="true" />
@@ -578,7 +595,7 @@ function App() {
         {/* ── HERO ──────────────────────────────────────────────────────── */}
         <section className="hero-section" id="hero">
           <motion.div className="hero-copy" style={{ y: heroCopyY }}>
-            <Reveal as="p" className="eyebrow">
+            <Reveal as="div" className="hero-badge">
               Scalable tech with founder-brand instincts
             </Reveal>
 
@@ -749,7 +766,33 @@ function App() {
             ))}
           </div>
 
-          <Reveal as="article" className="patent-card" delay={0.18}>
+          {/* ── Smart-Skin Patent (featured) */}
+          <Reveal as="article" className="patent-card patent-card-featured" delay={0.14}>
+            <div className="patent-shell">
+              <div className="patent-copy">
+                <p className="section-tag">{smartSkinPatent.tag}</p>
+                <h3>{smartSkinPatent.title}</h3>
+                <p>{smartSkinPatent.summary}</p>
+                <div className="patent-pipeline">
+                  {smartSkinPatent.pipeline.split('→').map((step, i, arr) => (
+                    <span key={step} className="pipeline-step">
+                      <span className="pipeline-label">{step.trim()}</span>
+                      {i < arr.length - 1 && <span className="pipeline-arrow">→</span>}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <ul className="patent-points">
+                {smartSkinPatent.points.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+
+          {/* ── Agriculture Patent */}
+          <Reveal as="article" className="patent-card" delay={0.22}>
             <div className="patent-shell">
               <div className="patent-copy">
                 <p className="section-tag">{upcomingPatent.tag}</p>

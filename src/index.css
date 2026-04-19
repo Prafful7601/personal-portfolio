@@ -1,27 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
   color-scheme: dark;
-  font-family: 'Manrope', sans-serif;
-  line-height: 1.5;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
   font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --bg: #070b16;
-  --bg-alt: #0b1120;
-  --surface: rgba(14, 20, 37, 0.8);
-  --surface-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
-  --heading: #f9f6ef;
-  --text: #d9dccf;
-  --muted: #9da7bc;
-  --muted-strong: #c5cada;
-  --line: rgba(255, 255, 255, 0.08);
-  --accent: #ffb86c;
-  --accent-soft: #9ae9c2;
-  --ink: #081018;
+  --bg: #030814;
+  --bg-alt: #070e1f;
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  --surface-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
+  --heading: #eef2ff;
+  --text: #8892b0;
+  --muted: #4a5568;
+  --muted-strong: #ccd6f6;
+  --line: rgba(255, 255, 255, 0.07);
+
+  /* Electric indigo → teal → violet palette */
+  --accent: #818cf8;       /* indigo */
+  --accent-soft: #64ffda;  /* teal/cyan */
+  --accent2: #c084fc;      /* violet */
+  --accent3: #f472b6;      /* pink */
+  --accent4: #34d399;      /* emerald */
+  --ink: #030814;
 }
 
 *,
@@ -40,49 +46,25 @@ body {
   min-height: 100vh;
   color: var(--text);
   background:
-    /* warm orange bloom at top-center */
-    radial-gradient(ellipse 110% 55% at 50% -5%, rgba(255, 120, 20, 0.28) 0%, transparent 65%),
-    /* teal bloom top-right */
-    radial-gradient(ellipse 70% 60% at 92% 22%, rgba(52, 210, 175, 0.18) 0%, transparent 60%),
-    /* indigo/violet bloom bottom-left */
-    radial-gradient(ellipse 90% 55% at -8% 85%, rgba(110, 90, 255, 0.16) 0%, transparent 60%),
-    /* soft purple mid-right */
-    radial-gradient(ellipse 55% 45% at 88% 75%, rgba(160, 80, 220, 0.1) 0%, transparent 55%),
-    /* base gradient */
-    linear-gradient(170deg, #090d1f 0%, #070b18 45%, #060810 100%);
+    radial-gradient(ellipse 110% 60% at 10% -8%, rgba(129, 140, 248, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 55% at 90% 5%,  rgba(100, 255, 218, 0.11) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 55% at 50% 108%,rgba(192, 132, 252, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 88% 82%, rgba(244, 114, 182, 0.07) 0%, transparent 55%),
+    linear-gradient(175deg, #07102a 0%, #030814 45%, #05091c 100%);
 }
 
-a,
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
+a, button, input, textarea, select { font: inherit; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
 
-a {
-  color: inherit;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-h1,
-h2,
-h3,
-p,
-ul {
+h1, h2, h3, p, ul {
   margin-block-start: 0;
   margin-block-end: 0;
 }
 
-#root {
-  min-height: 100vh;
-}
+#root { min-height: 100vh; }
 
 ::selection {
-  color: #081018;
-  background: #ffb86c;
+  color: #030814;
+  background: #818cf8;
 }
