@@ -489,11 +489,79 @@ function Reveal({ children, className = '', delay = 0, as = 'div', direction = '
   )
 }
 
+// ─── BackToTop ────────────────────────────────────────────────────────────────
+function BackToTop() {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 700)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <motion.button
+      type="button"
+      className="back-to-top"
+      aria-label="Back to top"
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      initial={false}
+      animate={visible ? { opacity: 1, y: 0, pointerEvents: 'auto' } : { opacity: 0, y: 16, pointerEvents: 'none' }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+    >
+      ↑
+    </motion.button>
+  )
+}
+
+// ─── Navigation ───────────────────────────────────────────────────────────────
+const navLinks = [
+  { href: '#story', id: 'story', label: 'Story' },
+  { href: '#work', id: 'work', label: 'Work' },
+  { href: '#branding', id: 'branding', label: 'Branding' },
+  { href: '#skills', id: 'skills', label: 'Skills' },
+  { href: '#projects', id: 'projects', label: 'Projects' },
+  { href: '#contact', id: 'contact', label: 'Contact' },
+]
+
+function useScrollSpy(ids) {
+  const [activeId, setActiveId] = useState('')
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActiveId(entry.target.id)
+        }
+      },
+      { rootMargin: '-35% 0px -55% 0px' },
+    )
+    ids.forEach((id) => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
+    return () => observer.disconnect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return activeId
+}
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 function App() {
   const prefersReducedMotion = useReducedMotion()
   const { scrollYProgress } = useScroll()
   const progressScale = useSpring(scrollYProgress, { stiffness: 140, damping: 24 })
+  const activeSection = useScrollSpy(navLinks.map((l) => l.id))
+  const [navScrolled, setNavScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setNavScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const heroOrbY     = useTransform(scrollYProgress, [0, 1],    [0, prefersReducedMotion ? 0 : -220])
   const heroCopyY    = useTransform(scrollYProgress, [0, 0.28], [0, prefersReducedMotion ? 0 : -80])
@@ -565,7 +633,11 @@ function App() {
       <motion.div className="ambient-orb ambient-orb-b" style={{ y: heroOrbY }} />
       <motion.div className="ambient-orb ambient-orb-c" style={{ y: heroOrbY }} />
 
-      <header className="topbar">
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
+
+      <header className={`topbar${navScrolled ? ' topbar-scrolled' : ''}`}>
         <a className="brand" href="#hero" aria-label="Prafful Gupta home">
           <span className="brand-mark">PG</span>
           <span className="brand-copy">
@@ -575,11 +647,16 @@ function App() {
         </a>
 
         <nav className="topnav" aria-label="Primary">
-          <a href="#story">Story</a>
-          <a href="#branding">Branding</a>
-          <a href="#skills">Skills</a>
-          <a href="#projects">Projects</a>
-          <a href="#contact">Contact</a>
+          {navLinks.map((link) => (
+            <a
+              key={link.id}
+              href={link.href}
+              className={activeSection === link.id ? 'active' : undefined}
+              aria-current={activeSection === link.id ? 'true' : undefined}
+            >
+              {link.label}
+            </a>
+          ))}
           <a
             className="nav-cta"
             href="/Prafful_Gupta_Resume.pdf"
@@ -591,7 +668,7 @@ function App() {
         </nav>
       </header>
 
-      <main>
+      <main id="main-content">
         {/* ── HERO ──────────────────────────────────────────────────────── */}
         <section className="hero-section" id="hero">
           <motion.div className="hero-copy" style={{ y: heroCopyY }}>
@@ -680,6 +757,24 @@ function App() {
               <span>requests per minute handled</span>
             </motion.div>
           </motion.div>
+
+          <motion.a
+            href="#story"
+            className="scroll-cue"
+            aria-label="Scroll to story section"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4, duration: 0.8 }}
+          >
+            <span className="scroll-cue-mouse">
+              <motion.span
+                className="scroll-cue-dot"
+                animate={prefersReducedMotion ? {} : { y: [0, 14, 0], opacity: [1, 0.2, 1] }}
+                transition={{ duration: 1.8, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+              />
+            </span>
+            <span className="scroll-cue-label">Scroll</span>
+          </motion.a>
         </section>
 
         {/* ── MARQUEE ───────────────────────────────────────────────────── */}
@@ -1088,6 +1183,49 @@ function App() {
           </div>
         </Reveal>
       </main>
+
+      <footer className="site-footer">
+        <div className="footer-inner">
+          <div className="footer-brand">
+            <span className="brand-mark">PG</span>
+            <div>
+              <strong>Prafful Gupta</strong>
+              <p>Backend engineer building scalable systems and founder brands from Delhi, India.</p>
+            </div>
+          </div>
+
+          <nav className="footer-nav" aria-label="Footer">
+            {navLinks.map((link) => (
+              <a key={link.id} href={link.href}>
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="footer-social">
+            <a href="https://github.com/Prafful7601" target="_blank" rel="noreferrer">
+              GitHub
+            </a>
+            <a
+              href="https://www.linkedin.com/in/prafful-gupta-67a3b0203/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              LinkedIn
+            </a>
+            <a href="mailto:praffulunabated@gmail.com">Email</a>
+          </div>
+        </div>
+
+        <div className="footer-base">
+          <p>© {new Date().getFullYear()} Prafful Gupta. Built with React + Motion.</p>
+          <a href="#hero" className="footer-top-link">
+            Back to top ↑
+          </a>
+        </div>
+      </footer>
+
+      <BackToTop />
     </div>
   )
 }
