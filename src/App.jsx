@@ -69,10 +69,10 @@ const smartSkinPatent = {
 }
 
 const upcomingPatent = {
-  tag: 'Patent Filing',
+  tag: 'Patent Filed',
   title: 'An AI + IoT precision-agriculture patent is one active thread of my work, not the whole future.',
   summary:
-    'The proposed invention is an AI-based pest detection and automated pesticide administration device for precision agriculture. It captures insect images and crop-damage patterns, identifies pest species with machine learning, determines the correct treatment based on pest type and crop growth stage, and triggers precision spraying in controlled quantities.',
+    'Filed as an ordinary patent application with the Indian Patent Office (Application No. 202611057250, filed 05 May 2026, published 17 July 2026). The invention is an AI-based pest detection and automated pesticide administration device for precision agriculture. It captures insect images and crop-damage patterns, identifies pest species with machine learning, determines the correct treatment based on pest type and crop growth stage, and triggers precision spraying in controlled quantities.',
   points: [
     'Combines computer vision, machine learning, IoT hardware, and automated actuation.',
     'Targets high-accuracy pest identification from insects and leaf-bite damage patterns.',
@@ -273,7 +273,7 @@ const marquee = [
   'Transaction Integrity',
   'Query Optimization',
   'AI x IoT Systems',
-  'Patent in Progress',
+  '2 Patents Filed',
   'Founder Positioning',
   'Personal Branding',
   'Multi-platform Social Growth',
