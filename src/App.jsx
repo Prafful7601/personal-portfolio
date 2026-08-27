@@ -54,6 +54,34 @@ const focusCards = [
   },
 ]
 
+const researchPaper = {
+  tag: 'Under Review',
+  title:
+    'Predicting Code Smell Severity in Large Open-Source Systems: How Source-Derived Complexity Features and Cross-Project Validation Reshape a Weak-Signal Problem',
+  summary:
+    'First author with S. Singh and P. K. Singh (KIET), submitted to an IEEE conference. A reproducible study of whether code smell severity can be predicted from code, and whether that prediction generalises across projects. Built from 6,907 consensus-labelled instances across 326 Apache and Eclipse repositories using the public MLCQ dataset.',
+  points: [
+    'Benchmarked 11 ML algorithms; source-derived complexity features raised four-class macro-F1 from 0.449 to 0.489 and binary ROC-AUC from 0.884 to 0.942.',
+    'Survives strict cross-project validation — no repository in both train and test — with a mean macro-F1 drop of only 0.016.',
+    'SHAP analysis attributes predictions chiefly to code size and class shape, with class-shape features acting in a non-obvious direction.',
+    'Every null result reported in full, with Benjamini-Hochberg correction across the test family.',
+  ],
+  link: { label: 'View Code', href: 'https://github.com/Prafful7601/code-smell-severity-mlcq' },
+}
+
+const credentials = [
+  {
+    title: 'CITI Program — Data or Specimens Only Research',
+    text:
+      'Human Subjects Research (2026). Credentialed by PhysioNet, MIT Laboratory for Computational Physiology, for restricted-access clinical databases including MIMIC-IV.',
+  },
+  {
+    title: 'ORCID',
+    text: '0009-0006-0857-8044',
+    href: 'https://orcid.org/0009-0006-0857-8044',
+  },
+]
+
 const smartSkinPatent = {
   tag: 'Patent Filed',
   title: 'Multimodal Smart-Skin Device for Real-Time Fatigue Analysis.',
@@ -861,6 +889,28 @@ function App() {
             ))}
           </div>
 
+          {/* ── Research Paper (stronger credential, sits above the patents) */}
+          <Reveal as="article" className="patent-card" delay={0.06}>
+            <div className="patent-shell">
+              <div className="patent-copy patent-copy-research">
+                <p className="section-tag">{researchPaper.tag}</p>
+                <h3>{researchPaper.title}</h3>
+                <p>{researchPaper.summary}</p>
+                <div className="project-links">
+                  <a href={researchPaper.link.href} target="_blank" rel="noreferrer">
+                    {researchPaper.link.label}
+                  </a>
+                </div>
+              </div>
+
+              <ul className="patent-points">
+                {researchPaper.points.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+
           {/* ── Smart-Skin Patent (featured) */}
           <Reveal as="article" className="patent-card patent-card-featured" delay={0.14}>
             <div className="patent-shell">
@@ -900,6 +950,30 @@ function App() {
                   <li key={point}>{point}</li>
                 ))}
               </ul>
+            </div>
+          </Reveal>
+
+          {/* ── Credentials (compact, lighter than the research/patent cards) */}
+          <Reveal className="credentials-row-wrap" delay={0.28} direction="fade">
+            <p className="mini-label">Credentials</p>
+            <div className="credentials-row">
+              {credentials.map((credential) => (
+                <div className="credential-card" key={credential.title}>
+                  <h4>{credential.title}</h4>
+                  {credential.href ? (
+                    <a
+                      className="credential-link"
+                      href={credential.href}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {credential.text}
+                    </a>
+                  ) : (
+                    <p>{credential.text}</p>
+                  )}
+                </div>
+              ))}
             </div>
           </Reveal>
         </section>
