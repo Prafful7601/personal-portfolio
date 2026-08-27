@@ -558,6 +558,7 @@ function BackToTop() {
 // ─── Navigation ───────────────────────────────────────────────────────────────
 const navLinks = [
   { href: '#story', id: 'story', label: 'Story' },
+  { href: '#research', id: 'research', label: 'Research', trackActive: false },
   { href: '#work', id: 'work', label: 'Work' },
   { href: '#branding', id: 'branding', label: 'Branding' },
   { href: '#skills', id: 'skills', label: 'Skills' },
@@ -593,7 +594,9 @@ function App() {
   const prefersReducedMotion = useReducedMotion()
   const { scrollYProgress } = useScroll()
   const progressScale = useSpring(scrollYProgress, { stiffness: 140, damping: 24 })
-  const activeSection = useScrollSpy(navLinks.map((l) => l.id))
+  const activeSection = useScrollSpy(
+    navLinks.filter((l) => l.trackActive !== false).map((l) => l.id),
+  )
   const [navScrolled, setNavScrolled] = useState(false)
 
   useEffect(() => {
@@ -901,93 +904,96 @@ function App() {
             ))}
           </div>
 
-          {/* ── Research Paper (stronger credential, sits above the patents) */}
-          <Reveal as="article" className="patent-card" delay={0.06}>
-            <div className="patent-shell">
-              <div className="patent-copy patent-copy-research">
-                <p className="section-tag">{researchPaper.tag}</p>
-                <h3>{researchPaper.title}</h3>
-                <p>{researchPaper.summary}</p>
-                <div className="project-links">
-                  <a href={researchPaper.link.href} target="_blank" rel="noreferrer">
-                    {researchPaper.link.label}
-                  </a>
-                </div>
-              </div>
-
-              <ul className="patent-points">
-                {researchPaper.points.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-
-          {/* ── Smart-Skin Patent (featured) */}
-          <Reveal as="article" className="patent-card patent-card-featured" delay={0.14}>
-            <div className="patent-shell">
-              <div className="patent-copy">
-                <p className="section-tag">{smartSkinPatent.tag}</p>
-                <h3>{smartSkinPatent.title}</h3>
-                <p>{smartSkinPatent.summary}</p>
-                <div className="patent-pipeline">
-                  {smartSkinPatent.pipeline.split('→').map((step, i, arr) => (
-                    <span key={step} className="pipeline-step">
-                      <span className="pipeline-label">{step.trim()}</span>
-                      {i < arr.length - 1 && <span className="pipeline-arrow">→</span>}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <ul className="patent-points">
-                {smartSkinPatent.points.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-
-          {/* ── Agriculture Patent */}
-          <Reveal as="article" className="patent-card" delay={0.22}>
-            <div className="patent-shell">
-              <div className="patent-copy">
-                <p className="section-tag">{upcomingPatent.tag}</p>
-                <h3>{upcomingPatent.title}</h3>
-                <p>{upcomingPatent.summary}</p>
-              </div>
-
-              <ul className="patent-points">
-                {upcomingPatent.points.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-
-          {/* ── Credentials (compact, lighter than the research/patent cards) */}
-          <Reveal className="credentials-row-wrap" delay={0.28} direction="fade">
-            <p className="mini-label">Credentials</p>
-            <div className="credentials-row">
-              {credentials.map((credential) => (
-                <div className="credential-card" key={credential.title}>
-                  <h4>{credential.title}</h4>
-                  {credential.href ? (
-                    <a
-                      className="credential-link"
-                      href={credential.href}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {credential.text}
+          {/* ── Research & Patents (nav-anchored: id="research") ────────── */}
+          <div id="research">
+            {/* Research Paper (stronger credential, sits above the patents) */}
+            <Reveal as="article" className="patent-card" delay={0.06}>
+              <div className="patent-shell">
+                <div className="patent-copy patent-copy-research">
+                  <p className="section-tag">{researchPaper.tag}</p>
+                  <h3>{researchPaper.title}</h3>
+                  <p>{researchPaper.summary}</p>
+                  <div className="project-links">
+                    <a href={researchPaper.link.href} target="_blank" rel="noreferrer">
+                      {researchPaper.link.label}
                     </a>
-                  ) : (
-                    <p>{credential.text}</p>
-                  )}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </Reveal>
+
+                <ul className="patent-points">
+                  {researchPaper.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+
+            {/* Smart-Skin Patent (featured) */}
+            <Reveal as="article" className="patent-card patent-card-featured" delay={0.14}>
+              <div className="patent-shell">
+                <div className="patent-copy">
+                  <p className="section-tag">{smartSkinPatent.tag}</p>
+                  <h3>{smartSkinPatent.title}</h3>
+                  <p>{smartSkinPatent.summary}</p>
+                  <div className="patent-pipeline">
+                    {smartSkinPatent.pipeline.split('→').map((step, i, arr) => (
+                      <span key={step} className="pipeline-step">
+                        <span className="pipeline-label">{step.trim()}</span>
+                        {i < arr.length - 1 && <span className="pipeline-arrow">→</span>}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <ul className="patent-points">
+                  {smartSkinPatent.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+
+            {/* Agriculture Patent */}
+            <Reveal as="article" className="patent-card" delay={0.22}>
+              <div className="patent-shell">
+                <div className="patent-copy">
+                  <p className="section-tag">{upcomingPatent.tag}</p>
+                  <h3>{upcomingPatent.title}</h3>
+                  <p>{upcomingPatent.summary}</p>
+                </div>
+
+                <ul className="patent-points">
+                  {upcomingPatent.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+
+            {/* Credentials (compact, lighter than the research/patent cards) */}
+            <Reveal className="credentials-row-wrap" delay={0.28} direction="fade">
+              <p className="mini-label">Credentials</p>
+              <div className="credentials-row">
+                {credentials.map((credential) => (
+                  <div className="credential-card" key={credential.title}>
+                    <h4>{credential.title}</h4>
+                    {credential.href ? (
+                      <a
+                        className="credential-link"
+                        href={credential.href}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {credential.text}
+                      </a>
+                    ) : (
+                      <p>{credential.text}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
         </section>
 
         {/* ── EXPERIENCE ────────────────────────────────────────────────── */}

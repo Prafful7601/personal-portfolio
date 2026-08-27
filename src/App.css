@@ -357,7 +357,8 @@ main {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 /* Offset anchored scrolls so the sticky header never overlaps headings */
 section[id],
-.contact-band[id] {
+.contact-band[id],
+#research {
   scroll-margin-top: 5.5rem;
 }
 
