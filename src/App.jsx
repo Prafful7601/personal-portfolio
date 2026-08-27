@@ -188,6 +188,18 @@ const skillGroups = [
 
 const projects = [
   {
+    name: 'AutoDeploy-AI',
+    stack: ['Python', 'scikit-learn', 'SHAP', 'FastAPI', 'GitHub API'],
+    summary:
+      'A CI build-failure prediction system trained on 261k builds from 243 open-source projects, built end to end from raw data to a served model with an honest account of where that model does and does not transfer.',
+    outcome: [
+      'Enforced strict temporal leakage prevention across 31 engineered features — every history feature computed only from data available before the build, verified by manual recomputation — then evaluated on a held-out-projects split, not just a random one: PR-AUC 0.80 temporal, 0.69 on unseen repositories, ~0.24 above a previous-build-outcome baseline.',
+      'Used SHAP to find the model leans heavily on build-history autocorrelation, concentrating ~66% of attribution in three features.',
+      'Shipped a FastAPI service with a live GitHub feature extractor, then surfaced train-serve skew before release — trained on Travis CI outcomes, serving against GitHub Actions — and documented which of the 31 features transfer exactly, approximately, or not at all, with an explicit low-confidence cold-start state for new repositories rather than over-flagging them.',
+    ],
+    links: [{ label: 'GitHub', href: 'https://github.com/Prafful7601/AutoDeploy-AI' }],
+  },
+  {
     name: 'Collab Platform',
     stack: ['Spring Boot', 'WebSockets', 'Redis', 'Kafka', 'H2', 'HTML/CSS/JS'],
     summary:
