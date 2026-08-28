@@ -197,7 +197,10 @@ const projects = [
       'Used SHAP to find the model leans heavily on build-history autocorrelation, concentrating ~66% of attribution in three features.',
       'Shipped a FastAPI service with a live GitHub feature extractor, then surfaced train-serve skew before release — trained on Travis CI outcomes, serving against GitHub Actions — and documented which of the 31 features transfer exactly, approximately, or not at all, with an explicit low-confidence cold-start state for new repositories rather than over-flagging them.',
     ],
-    links: [{ label: 'GitHub', href: 'https://github.com/Prafful7601/AutoDeploy-AI' }],
+    links: [
+      { label: 'GitHub', href: 'https://github.com/Prafful7601/AutoDeploy-AI' },
+      { label: 'Live App', href: 'https://web-one-swart-95.vercel.app/' },
+    ],
   },
   {
     name: 'Collab Platform',
