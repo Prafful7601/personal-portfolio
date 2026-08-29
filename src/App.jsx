@@ -561,7 +561,7 @@ function BackToTop() {
 // ─── Navigation ───────────────────────────────────────────────────────────────
 const navLinks = [
   { href: '#story', id: 'story', label: 'Story' },
-  { href: '#research', id: 'research', label: 'Research', trackActive: false },
+  { href: '#research', id: 'research', label: 'Research' },
   { href: '#work', id: 'work', label: 'Work' },
   { href: '#branding', id: 'branding', label: 'Branding' },
   { href: '#skills', id: 'skills', label: 'Skills' },
@@ -569,14 +569,27 @@ const navLinks = [
   { href: '#contact', id: 'contact', label: 'Contact' },
 ]
 
+// `ids` is in document order, and `research` sits nested inside `story`'s
+// bounds. Rather than just react to whichever entry the observer last
+// reports (nondeterministic when a parent and its nested child are both
+// intersecting), keep every id's current state and pick the *last* one
+// (in document order) that's intersecting — so the more specific, nested
+// section always wins over its ancestor.
 function useScrollSpy(ids) {
   const [activeId, setActiveId] = useState('')
+  const stateRef = useRef({})
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setActiveId(entry.target.id)
+        entries.forEach((entry) => {
+          stateRef.current[entry.target.id] = entry.isIntersecting
+        })
+        for (let i = ids.length - 1; i >= 0; i--) {
+          if (stateRef.current[ids[i]]) {
+            setActiveId(ids[i])
+            return
+          }
         }
       },
       { rootMargin: '-35% 0px -55% 0px' },
@@ -597,9 +610,7 @@ function App() {
   const prefersReducedMotion = useReducedMotion()
   const { scrollYProgress } = useScroll()
   const progressScale = useSpring(scrollYProgress, { stiffness: 140, damping: 24 })
-  const activeSection = useScrollSpy(
-    navLinks.filter((l) => l.trackActive !== false).map((l) => l.id),
-  )
+  const activeSection = useScrollSpy(navLinks.map((l) => l.id))
   const [navScrolled, setNavScrolled] = useState(false)
 
   useEffect(() => {
