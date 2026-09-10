@@ -9,6 +9,7 @@ import {
 } from 'motion/react'
 import { useRef, useEffect, useState, useCallback } from 'react'
 import './App.css'
+import BrandingPage from './BrandingPage'
 
 const stats = [
   { value: '10M+', label: 'impressions generated across founder and creator profiles' },
@@ -607,6 +608,10 @@ function useScrollSpy(ids) {
 
 // ─── App ──────────────────────────────────────────────────────────────────────
 function App() {
+  if (window.location.pathname === '/personal-branding') {
+    return <BrandingPage />
+  }
+
   const prefersReducedMotion = useReducedMotion()
   const { scrollYProgress } = useScroll()
   const progressScale = useSpring(scrollYProgress, { stiffness: 140, damping: 24 })
@@ -750,6 +755,9 @@ function App() {
             <Reveal className="hero-actions" delay={0.28}>
               <a className="button button-primary" href="mailto:praffulunabated@gmail.com">
                 Hire me for backend roles
+              </a>
+              <a className="button button-secondary" href="/personal-branding">
+                Explore LinkedIn personal branding
               </a>
               <a
                 className="button button-secondary"
@@ -1270,6 +1278,9 @@ function App() {
             <a className="button button-primary" href="mailto:praffulunabated@gmail.com">
               praffulunabated@gmail.com
             </a>
+            <a className="button button-secondary" href="/personal-branding">
+              Hire me for LinkedIn personal branding
+            </a>
             <a
               className="button button-secondary"
               href="https://www.linkedin.com/in/prafful-gupta-67a3b0203/"
@@ -1337,6 +1348,5 @@ function App() {
 }
 
 export default App
-
 
 
