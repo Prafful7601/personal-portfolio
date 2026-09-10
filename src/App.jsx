@@ -238,20 +238,6 @@ const projects = [
       },
     ],
   },
-  {
-    name: 'Personal Brand Growth Site',
-    stack: ['HTML', 'Tailwind CSS', 'Responsive Design', 'Analytics Storytelling'],
-    summary:
-      'A focused personal-brand growth website that turns client outcomes into a clear, polished proof-of-work experience, balancing editorial copy, responsive layout, and real analytics visualisation.',
-    outcome: [
-      'Designed a conversion-oriented landing page with a concise services narrative, process, social proof, and a clear contact path.',
-      'Built a responsive results showcase around real growth and content-performance analytics, with accessible image descriptions and readable supporting context.',
-      'Kept the visual system intentionally distinct from this portfolio while making the project presentation feel native to the portfolio’s dark, high-signal interface.',
-    ],
-    links: [
-      { label: 'Live Site', href: 'https://inhalenew.in/shriseys/' },
-    ],
-  },
 ]
 
 const brandingClients = [
@@ -1351,5 +1337,6 @@ function App() {
 }
 
 export default App
+
 
 
