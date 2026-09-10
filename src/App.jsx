@@ -756,7 +756,7 @@ function App() {
               <a className="button button-primary" href="mailto:praffulunabated@gmail.com">
                 Hire me for backend roles
               </a>
-              <a className="button button-secondary" href="/personal-branding">
+              <a className="button button-primary" href="/personal-branding">
                 Explore LinkedIn personal branding
               </a>
               <a
@@ -1348,5 +1348,4 @@ function App() {
 }
 
 export default App
-
 
