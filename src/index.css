@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
   color-scheme: dark;
-  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.6;
   font-weight: 400;
   font-synthesis: none;
@@ -10,55 +10,24 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Colors — Dala */
-  --color-void: #000000;
-  --color-bone-white: #ffffff;
-  --color-ash-gray: #9a9a9a;
-  --color-silver-mist: #bdbdbd;
-  --color-electric-iris: #8052ff;
-  --color-saffron-spark: #ffb829;
-  --color-deep-verdant: #15846e;
+  --bg: #030814;
+  --bg-alt: #070e1f;
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  --surface-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
+  --heading: #eef2ff;
+  --text: #8892b0;
+  --muted: #4a5568;
+  --muted-strong: #ccd6f6;
+  --line: rgba(255, 255, 255, 0.07);
 
-  --bg: var(--color-void);
-  --heading: var(--color-bone-white);
-  --text: var(--color-silver-mist);
-  --muted: var(--color-ash-gray);
-  --muted-strong: var(--color-silver-mist);
-  --line: rgba(255, 255, 255, 0.1);
-  --accent: var(--color-electric-iris);
-  --accent-amber: var(--color-saffron-spark);
-  --accent-verdant: var(--color-deep-verdant);
-  --ink: #ffffff;
-
-  /* Typography scale */
-  --font-display: ui-sans-serif, system-ui;
-  --text-caption: 12px;
-  --text-nav-label: 14px;
-  --text-body: 18px;
-  --text-heading-2xs: 24px;
-  --text-heading-xs: 27px;
-  --text-subheading: 36px;
-  --text-heading-sm: 42px;
-  --text-heading: 48px;
-  --text-heading-lg: 78px;
-  --text-display: 113px;
-
-  /* Spacing */
-  --spacing-6: 6px;
-  --spacing-12: 12px;
-  --spacing-18: 18px;
-  --spacing-24: 24px;
-  --spacing-30: 30px;
-  --spacing-36: 36px;
-  --spacing-60: 60px;
-  --spacing-96: 96px;
-  --spacing-120: 120px;
-
-  /* Radius */
-  --radius-buttons: 24px;
-  --radius-cards: 24px;
-  --radius-nav: 24px;
-  --radius-tags: 9999px;
+  /* Electric indigo → teal → violet palette */
+  --accent: #818cf8;       /* indigo */
+  --accent-soft: #64ffda;  /* teal/cyan */
+  --accent2: #c084fc;      /* violet */
+  --accent3: #f472b6;      /* pink */
+  --accent4: #34d399;      /* emerald */
+  --ink: #030814;
 }
 
 *,
@@ -76,7 +45,12 @@ body {
   min-width: 320px;
   min-height: 100vh;
   color: var(--text);
-  background: var(--color-void);
+  background:
+    radial-gradient(ellipse 110% 60% at 10% -8%, rgba(129, 140, 248, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 55% at 90% 5%,  rgba(100, 255, 218, 0.11) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 55% at 50% 108%,rgba(192, 132, 252, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 88% 82%, rgba(244, 114, 182, 0.07) 0%, transparent 55%),
+    linear-gradient(175deg, #07102a 0%, #030814 45%, #05091c 100%);
 }
 
 a, button, input, textarea, select { font: inherit; }
@@ -91,12 +65,12 @@ h1, h2, h3, p, ul {
 #root { min-height: 100vh; }
 
 ::selection {
-  color: #000000;
-  background: var(--color-electric-iris);
+  color: #030814;
+  background: #818cf8;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-electric-iris);
+  outline: 2px solid var(--accent-soft);
   outline-offset: 3px;
 }
 

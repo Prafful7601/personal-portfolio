@@ -248,6 +248,7 @@ const brandingClients = [
     tag: 'Social Entrepreneur',
     href: 'https://www.linkedin.com/in/divyajainseekho/',
     photo: 'https://media.licdn.com/dms/image/v2/D5603AQGCD6efBxlI3Q/profile-displayphoto-scale_200_200/B56ZsxQAhDHkAY-/0/1766057840698?e=2147483647&v=beta&t=JTx7HFJkmEE-2iEOz3fYPn4foCfBY3SBeW2PEYOXw-U',
+    gradient: ['#ff8a24', '#ffd27f'],
   },
   {
     name: 'Charu Agrawal',
@@ -255,6 +256,7 @@ const brandingClients = [
     tag: 'D2C & Fashion',
     href: 'https://www.linkedin.com/in/charu-agrawal-511409178/',
     photo: 'https://media.licdn.com/dms/image/v2/D4D03AQE5VxCTvpX2mw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1684396364074?e=2147483647&v=beta&t=rgBivzO5WIwXbKpah7Y9t4hD4oxtkq1eYvdfb8RHCDs',
+    gradient: ['#3fd4b4', '#9ae9c2'],
   },
   {
     name: 'Sneha Jain',
@@ -262,6 +264,7 @@ const brandingClients = [
     tag: 'LinkedIn Growth',
     href: 'https://www.linkedin.com/in/sneha-jain-5a989015/',
     photo: '/sneha-jain.jpg',
+    gradient: ['#a855f7', '#e879f9'],
   },
   {
     name: 'Prateek Tosniwal',
@@ -269,6 +272,7 @@ const brandingClients = [
     tag: 'Personal Brand',
     href: 'https://www.linkedin.com/in/prateektosniwal/',
     photo: '/prateek-tosniwal.jpg',
+    gradient: ['#3b82f6', '#93c5fd'],
   },
 ]
 
@@ -406,7 +410,11 @@ function TerminalBlock({ prefersReducedMotion }) {
       animate={prefersReducedMotion ? {} : { y: [0, -8, 0] }}
       transition={{ duration: 5.6, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
     >
-      <p className="terminal-label">Direction</p>
+      <div className="terminal-head">
+        <span />
+        <span />
+        <span />
+      </div>
       <div className="terminal-body">
         {terminalLines.map((line, i) => (
           <motion.p
@@ -430,52 +438,6 @@ function TerminalBlock({ prefersReducedMotion }) {
   )
 }
 
-// ─── ParticleField ────────────────────────────────────────────────────────────
-// Signature Dala motif: small outlined triangles scattered across the void.
-// Generated once at module load (not during render) so hooks stay pure.
-const PARTICLE_COLORS = ['#8052ff', '#ffb829', '#15846e', '#60a5fa', '#e879f9']
-
-function createParticles(count) {
-  return Array.from({ length: count }, () => ({
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: 7 + Math.random() * 11,
-    rotate: Math.random() * 360,
-    color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
-    opacity: 0.2 + Math.random() * 0.4,
-  }))
-}
-
-const PAGE_PARTICLES = createParticles(70)
-const HERO_PARTICLES = createParticles(60)
-
-function ParticleField({ particles, className = '', page = false }) {
-  return (
-    <div
-      className={`particle-field${page ? ' particle-field-page' : ''}${className ? ` ${className}` : ''}`}
-      aria-hidden="true"
-    >
-      {particles.map((p, i) => (
-        <svg
-          key={i}
-          className="particle-triangle"
-          style={{
-            left: `${p.x}%`,
-            top: `${p.y}%`,
-            transform: `rotate(${p.rotate}deg)`,
-            opacity: p.opacity,
-          }}
-          width={p.size}
-          height={p.size}
-          viewBox="0 0 10 10"
-        >
-          <polygon points="5,0 10,10 0,10" fill="none" stroke={p.color} strokeWidth="1" />
-        </svg>
-      ))}
-    </div>
-  )
-}
-
 // ─── ClientAvatar ─────────────────────────────────────────────────────────────
 function ClientAvatar({ client }) {
   const [imgError, setImgError] = useState(false)
@@ -484,7 +446,14 @@ function ClientAvatar({ client }) {
 
   return (
     <div className="client-avatar-wrap">
-      <div className="client-avatar">
+      <div
+        className="client-avatar"
+        style={
+          showPhoto
+            ? {}
+            : { background: `linear-gradient(135deg, ${client.gradient[0]}, ${client.gradient[1]})` }
+        }
+      >
         {showPhoto ? (
           <img
             src={client.photo}
@@ -497,6 +466,10 @@ function ClientAvatar({ client }) {
           initials
         )}
       </div>
+      <div
+        className="client-avatar-ring"
+        style={{ borderColor: `${client.gradient[0]}66` }}
+      />
     </div>
   )
 }
@@ -643,10 +616,27 @@ function App() {
   const { scrollYProgress } = useScroll()
   const progressScale = useSpring(scrollYProgress, { stiffness: 140, damping: 24 })
   const activeSection = useScrollSpy(navLinks.map((l) => l.id))
+  const [navScrolled, setNavScrolled] = useState(false)
 
+  useEffect(() => {
+    const onScroll = () => setNavScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const heroOrbY     = useTransform(scrollYProgress, [0, 1],    [0, prefersReducedMotion ? 0 : -220])
   const heroCopyY    = useTransform(scrollYProgress, [0, 0.28], [0, prefersReducedMotion ? 0 : -80])
   const heroPanelY   = useTransform(scrollYProgress, [0, 0.28], [0, prefersReducedMotion ? 0 : 95])
   const heroPanelRotate = useTransform(scrollYProgress, [0, 0.28], [0, prefersReducedMotion ? 0 : -6])
+  const bgYSlow      = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -120])
+  const bgYMedium    = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 180])
+  const bgYFast      = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 280])
+  const bgRotate     = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 18])
+  const bgScale      = useTransform(scrollYProgress, [0, 1], [1, prefersReducedMotion ? 1 : 1.14])
+  const ghostX       = useTransform(scrollYProgress, [0, 1], ['-4%', prefersReducedMotion ? '-4%' : '8%'])
+  const ghostXReverse = useTransform(scrollYProgress, [0, 1], ['6%', prefersReducedMotion ? '6%' : '-6%'])
+  const gridOpacity  = useTransform(scrollYProgress, [0, 0.3, 1], [0.22, 0.34, 0.16])
 
   // Cursor glow
   const rawMouseX = useMotionValue(-400)
@@ -679,13 +669,37 @@ function App() {
 
       <motion.div className="progress-bar" style={{ scaleX: progressScale }} />
 
-      <ParticleField page particles={PAGE_PARTICLES} />
+      <div className="parallax-stage" aria-hidden="true">
+        <motion.div className="parallax-grid" style={{ y: bgYSlow, opacity: gridOpacity }} />
+        <motion.div
+          className="parallax-rings"
+          style={{ y: bgYMedium, rotate: bgRotate, scale: bgScale }}
+        />
+        <motion.div className="parallax-beam parallax-beam-a" style={{ y: bgYFast }} />
+        <motion.div className="parallax-beam parallax-beam-b" style={{ y: bgYMedium }} />
+        <motion.div
+          className="parallax-ghost parallax-ghost-a"
+          style={{ y: bgYMedium, x: ghostX }}
+        >
+          SYSTEMS
+        </motion.div>
+        <motion.div
+          className="parallax-ghost parallax-ghost-b"
+          style={{ y: bgYFast, x: ghostXReverse }}
+        >
+          SCALE
+        </motion.div>
+      </div>
+
+      <motion.div className="ambient-orb ambient-orb-a" style={{ y: heroOrbY }} />
+      <motion.div className="ambient-orb ambient-orb-b" style={{ y: heroOrbY }} />
+      <motion.div className="ambient-orb ambient-orb-c" style={{ y: heroOrbY }} />
 
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
 
-      <header className="topbar">
+      <header className={`topbar${navScrolled ? ' topbar-scrolled' : ''}`}>
         <a className="brand" href="#hero" aria-label="Prafful Gupta home">
           <span className="brand-mark">PG</span>
           <span className="brand-copy">
@@ -742,14 +756,24 @@ function App() {
               <a className="button button-primary" href="mailto:praffulunabated@gmail.com">
                 Hire me for backend roles
               </a>
-              <a className="ghost-link" href="/personal-branding">
-                Explore LinkedIn branding →
+              <a className="button button-primary" href="/personal-branding">
+                Explore LinkedIn personal branding
               </a>
-              <a className="ghost-link" href="https://github.com/Prafful7601" target="_blank" rel="noreferrer">
-                View GitHub →
+              <a
+                className="button button-secondary"
+                href="https://github.com/Prafful7601"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View GitHub
               </a>
-              <a className="ghost-link" href="/Prafful_Gupta_Resume.pdf" target="_blank" rel="noreferrer">
-                Open resume →
+              <a
+                className="button button-secondary"
+                href="/Prafful_Gupta_Resume.pdf"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open resume
               </a>
             </Reveal>
 
@@ -768,7 +792,8 @@ function App() {
             whileHover={prefersReducedMotion ? {} : { rotate: -2, scale: 1.01 }}
             transition={{ type: 'spring', stiffness: 160, damping: 18 }}
           >
-            <ParticleField particles={HERO_PARTICLES} className="hero-particles" />
+            <div className="panel-grid" />
+            <div className="panel-scan" />
 
             <TerminalBlock prefersReducedMotion={prefersReducedMotion} />
 
@@ -1098,15 +1123,37 @@ function App() {
                 delay={i * 0.1}
                 direction="up"
               >
+                {/* Per-card colour glow */}
+                <div
+                  className="client-card-glow"
+                  style={{
+                    background: `radial-gradient(circle, ${client.gradient[0]}40, transparent 70%)`,
+                  }}
+                />
+
+                {/* Glass shimmer sweep */}
+                <div className="client-card-shimmer" />
+
                 <ClientAvatar client={client} />
 
                 <div className="client-info">
-                  <span className="client-tag">{client.tag}</span>
                   <h3 className="client-name">{client.name}</h3>
                   <p className="client-role">{client.role}</p>
+                  <span
+                    className="client-tag"
+                    style={{ color: client.gradient[0], borderColor: `${client.gradient[0]}44` }}
+                  >
+                    {client.tag}
+                  </span>
                 </div>
 
-                <a className="client-linkedin-btn" href={client.href} target="_blank" rel="noreferrer">
+                <a
+                  className="client-linkedin-btn"
+                  href={client.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ '--accent-col': client.gradient[0] }}
+                >
                   View on LinkedIn →
                 </a>
               </Reveal>
@@ -1231,14 +1278,24 @@ function App() {
             <a className="button button-primary" href="mailto:praffulunabated@gmail.com">
               praffulunabated@gmail.com
             </a>
-            <a className="ghost-link" href="/personal-branding">
-              Hire me for LinkedIn branding →
+            <a className="button button-secondary" href="/personal-branding">
+              Hire me for LinkedIn personal branding
             </a>
-            <a className="ghost-link" href="https://www.linkedin.com/in/prafful-gupta-67a3b0203/" target="_blank" rel="noreferrer">
-              LinkedIn →
+            <a
+              className="button button-secondary"
+              href="https://www.linkedin.com/in/prafful-gupta-67a3b0203/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              LinkedIn
             </a>
-            <a className="ghost-link" href="/Prafful_Gupta_Resume.pdf" target="_blank" rel="noreferrer">
-              Download resume →
+            <a
+              className="button button-secondary"
+              href="/Prafful_Gupta_Resume.pdf"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Download resume
             </a>
           </div>
         </Reveal>
